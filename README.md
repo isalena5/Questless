@@ -4,6 +4,7 @@ This is a to-do list app built to make sandbox gaming a better experience for ga
 ## Installlation
 Now hold on. This ain't even public yet.
 
+> [!NOTE]
 > ## ![alt text](https://fontawesome.com/icons/arrows-rotate?f=classic&s=solid "Update Icon") Updates 
 >> ### Branch v0.0.0
 >>
