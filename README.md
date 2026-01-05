@@ -5,7 +5,7 @@ This is a to-do list app built to make sandbox gaming a better experience for ga
 Now hold on. This ain't even public yet.
 
 > \[!NOTE]
-> ## ![Arrows rotate](https://fontawesome.com/icons/arrows-rotate?f=classic&s=solid "Update Icon") Updates 
+> ## Updates 
 >> ### Branch v0.0.0
 >>
 >> - Changed the custom CSS to use the TailwindCSS + DaisyUI libraries
