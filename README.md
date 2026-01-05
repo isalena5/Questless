@@ -17,6 +17,11 @@ Now hold on. This ain't even public yet.
 >> - Deleted all custom CSS except for the background's gradient which is now surface
 >> - Website now reads the styles from public/output.css instead
 >> - Added some comments to explain parts of the code (More are missing and coming soon)
+>> - Added a "Reset" button to clear all tasks
+
+## Upcoming changes
+- Solve the dissappearance of the 'X' button to eliminate each task
+- Rework the current data storage method (HTML)
 
 ## Branch BarebonesApp
 This is the first ever version of this app. It was built with custom CSS with this [YouTube tutorial](https://youtu.be/G0jO8kUrg-I?si=6fqAX5_d_Y60PDST).
