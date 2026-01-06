@@ -4,21 +4,19 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>To Do List app</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="public/output.css">
 </head>
 
-<body>
-    <div class="container">
-        <div class="todo-app">
-            <h2>To-Do List</h2>
-            <div class="row">
-                <input type="text" id="input-box" placeholder="Add your task">
-                <button onclick="addTask()">Add</button>
+<body class="surface flex items-center justify-center">
+    <div class="card w-96 bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">To-Do List</h2>
+            <div class="flex gap-2">
+                <input type="text" id="input-box" placeholder="Add your task" class="input input-bordered w-full">
+                <button class="btn btn-primary" onclick="addTask()">Add</button>
+                <button class="btn btn-error" onclick="deleteAll()">Reset</button>
             </div>
-            <ul id="list-container">
-                <!-- <li class="checked">Task 1</li>
-                <li>Task 2</li>
-                <li>Task 3</li>> -->
+            <ul id="list-container" class="mt-4 space-y-2">
             </ul>
         </div>
     </div>
