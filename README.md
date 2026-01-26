@@ -7,7 +7,7 @@ Now hold on. This ain't even public yet.
 > \[!NOTE]
 > ### Updates 
 >> #### Branch v0.0 (0.0.1) -- Pushed to main
->> - The 'X' button is no longer lost. Fixed broken code preventing for the 'X' tobe displayed.
+>> - The 'X' button is no longer lost. Fixed broken code preventing for the 'X' to be displayed.
 >> - Added 'HeroIcons' (The 'X' button)
 >>
 >> #### v0.0.0
