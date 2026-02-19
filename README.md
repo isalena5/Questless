@@ -8,7 +8,7 @@ Now, hold on. This ain't even public yet.
 > ### Updates 
 >> #### Branch v0.0 (0.0.2)
 >> - Overhauled storage method to use JSON files instead of saving as HTML with its UI embbeded
->> - Tasks are not classes instead with unique IDs, titles and a completed state
+>> - Tasks are now classes instead with unique IDs, titles and a completed state
 >>      - This will make adding nested tasks and embedding other information in tasks easier, when it's time to add them
 >> - Added more comments to the script.js code (still more to add, but I'm making progress)
 >> - Added 'Enter' keyboard shorcut to add tasks (life is beautiful now)
