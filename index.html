@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>To Do List app</title>
     <link rel="stylesheet" href="public/output.css">
@@ -13,8 +14,8 @@
             <h2 class="card-title">To-Do List</h2>
             <div class="flex gap-2">
                 <input type="text" id="input-box" placeholder="Add your task" class="input input-bordered w-full">
-                <button class="btn btn-primary" onclick="addTask()">Add</button>
-                <button class="btn btn-error" onclick="deleteAll()">Reset</button>
+                <button id="add-btn" class="btn btn-primary">Add</button>
+                <button id="reset-btn" class="btn btn-error">Reset</button>
             </div>
             <ul id="list-container" class="mt-4 space-y-2">
             </ul>

@@ -2,10 +2,17 @@
 This is a to-do list app built to make sandbox gaming a better experience for gamers.
 
 ## Installlation
-Now hold on. This ain't even public yet.
+Now, hold on. This ain't even public yet.
 
 > \[!NOTE]
 > ### Updates 
+>> #### Branch v0.0 (0.0.2)
+>> - Overhauled storage method to use JSON files instead of saving as HTML with its UI embbeded
+>> - Tasks are not classes instead with unique IDs, titles and a completed state
+>>      - This will make adding nested tasks and embedding other information in tasks easier, when it's time to add them
+>> - Added more comments to the script.js code (still more to add, but I'm making progress)
+>> - Added 'Enter' keyboard shorcut to add tasks (life is beautiful now)
+>>
 >> #### Branch v0.0 (0.0.1) -- Pushed to main
 >> - The 'X' button is no longer lost. Fixed broken code preventing for the 'X' tobe displayed.
 >> - Added 'HeroIcons' (The 'X' button)
@@ -23,7 +30,7 @@ Now hold on. This ain't even public yet.
 >> - Added a "Reset" button to clear all tasks
 
 ## Upcoming changes
-- Determine all changes needed for version 0.1 (Alpha)
+- Working on design and systems for version 0.1 (Alpha)
 
 ## Branch BarebonesApp
 This is the first ever version of this app. It was built with custom CSS with this [YouTube tutorial](https://youtu.be/G0jO8kUrg-I?si=6fqAX5_d_Y60PDST).
