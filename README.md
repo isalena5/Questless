@@ -5,7 +5,14 @@ This is a to-do list app built to make sandbox gaming a better experience for ga
 Now, hold on. This ain't even public yet.
 
 > \[!NOTE]
-> ### Updates 
+> ### Updates
+>> #### Branch v0.0 (0.0.3)
+>> - Subtasks:
+>>   - There are subtasks now
+>>   - When task is completed all subtasks are automatically checked off, and viceversa
+>> - Added comments, still missing most
+>> - There is time metadata now, I will use it when the time is right
+>>   
 >> #### Branch v0.0 (0.0.2)
 >> - Overhauled storage method to use JSON files instead of saving as HTML with its UI embbeded
 >> - Tasks are now classes instead with unique IDs, titles and a completed state
