@@ -10,7 +10,7 @@ Now, hold on. This ain't even public yet.
 >> - Subtasks:
 >>   - There are subtasks now
 >>   - When task is completed all subtasks are automatically checked off, and viceversa
->> - Added comments, still missing most
+>> - Added comments, still missing most (script.js has been updated, all comments are now present)
 >> - There is time metadata now, I will use it when the time is right
 >>   
 >> #### Branch v0.0 (0.0.2)
