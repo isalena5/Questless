@@ -12,13 +12,19 @@
     // -----> submit own templates *
     // -----> make own templates **
 
+/*
+==========================================================
 
+----------------------- Task Class -----------------------
+
+==========================================================
+*/
 
 class Task{
     constructor(title, isSubtask = false) {
         this.id = crypto.randomUUID(); // Generates random ID (Unique for each task)
         this.title = title;            // Task's title
-        this.completed = false;        // Is the track done?
+        this.completed = false;        // Determines whether the task is done or not
 
         // Date & Time the task was created at       
         this.creationDate = new Date().toLocaleDateString();
@@ -38,10 +44,10 @@ class Task{
     }
 }
 
-const inputBox = document.getElementById("input-box"); // References input field of tasks
-const listContainer = document.getElementById("list-container"); // References the container <ul> that holds all tasks
+const inputBox = document.getElementById("input-box");               // References input field where user type tasks
+const listContainer = document.getElementById("list-container");     // References the container <ul> that holds all tasks to be displayed
 
-let tasks = []; // Tasks array (holds all tasks)
+let tasks = []; // Tasks array (holds all task objects)
 
 // --------------------------------------------------------
 // --------------------------------------------------------
@@ -59,20 +65,20 @@ let tasks = []; // Tasks array (holds all tasks)
 */
 
 function addTask(){
-    const title = inputBox.value.trim(); // Remove extra spaces at start & end
+    const title = inputBox.value.trim();     // Remove extra spaces at start & end
 
     if(!title) {                             // If there is nothing written in title, show alert
         alert("You must write something!");
         return;                              // Exit
     }
 
-    const newTask = new Task(title); // Create new task
-    tasks.push(newTask); // Add task to the array
+    const newTask = new Task(title);     // Create new task
+    tasks.push(newTask);                 // Add task to the array
 
-    inputBox.value = ""; // Clear input field
+    inputBox.value = "";                 // Clear input field
 
-    saveTasks(); // Save to localStorage
-    render(); // Update UI
+    saveTasks();                         // Save to localStorage
+    render();                            // Update UI
 }
 
 
@@ -100,8 +106,8 @@ function deleteTask(taskId){        // Delete task by their ID
     }
 
     for(let task of tasks){                                                         // If not parent, then check other level (children)
-        const childIndex = task.subtasks?.findIndex(s => s.id === taskId);          // 
-        if(childIndex !== -1 && childIndex !== undefined){                          // If it is in the child level, run:
+        const childIndex = task.subtasks?.findIndex(s => s.id === taskId);           
+        if(childIndex !== -1 && childIndex !== undefined){                          // If it is in the child level, run the code
             task.subtasks.splice(childIndex, 1);                                    // Remove subtask from parent's subtasks array
             
             saveTasks();
@@ -134,14 +140,14 @@ function toggleTask(taskId, checkboxElement){
         return;
     }
 
-    const {task, parent} = result;  // De-construct
+    const { task, parent } = result;  // De-construct
 
     task.completed = checkboxElement.checked;  // Update with current checkbox state
 
     const span = checkboxElement.nextElementSibling;            // Get the span besides the checkbox
     span.classList.toggle("line-through", task.completed);      // Add or remove line-through effect
 
-    if(!parent && task.subtasks){
+    if(!parent && task.subtasks){                        // If this is a parent task, update all subtasks to match the parent's state
         task.subtasks.forEach(sub => {
             sub.completed = task.completed;
 
@@ -159,10 +165,9 @@ function toggleTask(taskId, checkboxElement){
 
     }
 
-    if(parent){
-        parent.completed = parent.subtasks.every(s => s.completed);
-
-        const parentLi = document.querySelector(`li[data-id="${parent.id}"]`);
+    if(parent){                                                                    // If this is a subtask:
+        parent.completed = parent.subtasks.every(s => s.completed);               // Check if all siblings are completed           
+        const parentLi = document.querySelector(`li[data-id="${parent.id}"]`);   // Update parent's status
         if(!parentLi){
             return;
         }
@@ -190,13 +195,13 @@ function toggleTask(taskId, checkboxElement){
 */
 
 function addSubtask(parentId, title){
-    const parent = tasks.find(t => t.id === parentId);
+    const parent = tasks.find(t => t.id === parentId);    // Find parent task
 
-    if(!parent || parent.isSubtask){
+    if(!parent || parent.isSubtask){                     // Check that it exists and is not already a subtask (Safe-lock)
         return;
     }
     
-    parent.subtasks.push(new Task(title, true));
+    parent.subtasks.push(new Task(title, true));        // Add new subtask inside the parent array
 
     saveTasks();
     render();
@@ -245,7 +250,7 @@ function findParentAndTask(taskId){
 */
 
 function saveTasks(){
-    localStorage.setItem("tasks", JSON.stringify(tasks)); // Save tasks array to localStorage as a JSON string
+    localStorage.setItem("tasks", JSON.stringify(tasks));     // Save tasks array to localStorage as a JSON string
 }
 
 
@@ -261,10 +266,10 @@ function saveTasks(){
 */
 
 function loadTasks() {
-    const restoreSesh = localStorage.getItem("tasks"); // Get saved tasks
+    const restoreSesh = localStorage.getItem("tasks");     // Get saved tasks
     
     if(restoreSesh){
-        tasks = JSON.parse(restoreSesh); // Convert JSON string back into an array
+        tasks = JSON.parse(restoreSesh);     // Convert JSON string back into an array
     }
 }
 
@@ -281,8 +286,8 @@ function loadTasks() {
 */
 
 function deleteAll(){
-    localStorage.removeItem("tasks"); // Remove tasks from localStorage
-    tasks = []; // Clear the tasks array
+    localStorage.removeItem("tasks");     // Remove tasks from localStorage
+    tasks = [];     // Clear the tasks array
 
     render();
 }
@@ -296,13 +301,14 @@ function deleteAll(){
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function render(){
-    listContainer.innerHTML = ""; // Clear existing HTML
+    listContainer.innerHTML = "";                      // Clear existing HTML
 
-    tasks.forEach(task => {
+    tasks.forEach(task => {                           // Loop through all parent tasks
         const li = document.createElement("li");
         li.className = "flex items-center gap-3";
         li.dataset.id = task.id;
 
+        // Build the HTML for each task object 
         li.innerHTML = 
             `<input type="checkbox" class="checkbox checkbox-primary" ${task.completed ? "checked" : ""} />
             <span class="flex-1 ${task.completed ? "line-through" : ""}">${task.title}</span>
@@ -325,13 +331,14 @@ function render(){
 
         listContainer.appendChild(li);
 
-        if(task.subtasks && task.subtasks.length > 0){
+        if(task.subtasks && task.subtasks.length > 0){        // Render subtasks, if they exist
             task.subtasks.forEach(sub => {
                 const subLi = document.createElement("li");
 
                 subLi.className = "flex items-center gap-3 ml-6";
                 subLi.dataset.id = sub.id;
 
+                // Build the HTML for each subtask element
                 subLi.innerHTML = 
                 `<input type="checkbox" class="checkbox checkbox-primary" ${sub.completed ? "checked" : ""} />
                 <span class="flex-1 ${sub.completed ? "line-through" : ""}"> ${sub.title} </span>
@@ -369,7 +376,7 @@ function render(){
 // ---------------- E V E N T S -----------------
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-listContainer.addEventListener("change",
+listContainer.addEventListener("change",        // Listens (tracks) for checkbox changes (if it's checked (done) or not)
     function(e){
         if(e.target.type !== "checkbox"){
             return;
@@ -385,7 +392,7 @@ listContainer.addEventListener("change",
         
     })
 
-listContainer.addEventListener("click",
+listContainer.addEventListener("click",        // Listen for clicks on the delete button 
     function(e){
     const deleteButton = e.target.closest(".delete");
     if(!deleteButton){
@@ -398,19 +405,20 @@ listContainer.addEventListener("click",
     }
 
     const taskId = li.dataset.id;
-    deleteTask(taskId);
+    deleteTask(taskId);                       // If the delete button is clicked, run the function to delete task
 
 });
 
-document.getElementById("add-btn").addEventListener("click", addTask);
-document.getElementById("reset-btn").addEventListener("click", deleteAll);
+document.getElementById("add-btn").addEventListener("click", addTask);        // Add task when the Add button is clicked
+document.getElementById("reset-btn").addEventListener("click", deleteAll);    // Delete all tasks when the reset button is clicked
 
-inputBox.addEventListener("keypress",
+inputBox.addEventListener("keypress",    // When 'Enter' is pressed, add a task
     function(e){
         if(e.key === "Enter"){
             addTask();
         }
     });
 
+// Load and render all tasks when the page loads
 loadTasks();
 render();
