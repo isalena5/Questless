@@ -6,7 +6,7 @@ Now, hold on. This ain't even public yet.
 
 > \[!NOTE]
 > ### Updates
->> #### Branch v0.0 (0.0.3)
+>> #### v0.0 (0.0.3) -- Pushed to main
 >> - Subtasks:
 >>   - There are subtasks now
 >>   - When task is completed all subtasks are automatically checked off, and viceversa
