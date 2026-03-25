@@ -6,7 +6,7 @@ Now, hold on. This ain't even public yet.
 
 > \[!NOTE]
 > ### Updates
->> #### ## [0.1] - 2026-03-01 - Branch v0.0 
+>> ###### [0.1] - 2026-03-01 - Branch v0.0 
 >> ### Added
 >> - Added a changelod.md file for better/more organized documentation
 >> - Game selection page (will now become the main page)
