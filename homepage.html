@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>To Do List app</title>
+    <link rel="stylesheet" href="public/output.css">
+</head>
+
+<body class="surface flex items-center justify-center">
+    <div class="content-flex">
+
+        <!-- Filter top bar -->
+        <div class="filter-bar px-6 py-4">
+            <button type="button" class="btn btn-ghost">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4">
+                    <path fill-rule="evenodd"
+                        d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 0 1 .628.74v2.288a2.25 2.25 0 0 1-.659 1.59l-4.682 4.683a2.25 2.25 0 0 0-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 0 1 8 18.25v-5.757a2.25 2.25 0 0 0-.659-1.591L2.659 6.22A2.25 2.25 0 0 1 2 4.629V2.34a.75.75 0 0 1 .628-.74Z"
+                        clip-rule="evenodd" />
+                </svg>
+                Last played
+            </button>
+            <input type="checkbox" class="checkbox checkbox-sm select-all-checkbox" />
+        </div>
+
+        <!-- Games grid container -->
+        <div class="cd-cards-group px-3 pt-9 pb-16 mt-7">
+            <div id="games-container" class="grid grid-cols-3 justify-items-center h-[294px]"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="1242" height="82" viewBox="0 0 1242 82" fill="none">
+                <path d="M79.3845 0L0.88274 32H1242L1185.43 0H79.3845Z" fill="#804000" />
+                <path d="M0 32H1242V82H0V32Z" fill="#492500" />
+            </svg>
+        </div>
+
+        <div class="fab">
+            <button class="btn btn-lg btn-circle btn-primary">F</button>
+        </div>
+
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,43 +1,31 @@
-# To-do List app
+# Questless app
 This is a to-do list app built to make sandbox gaming a better experience for gamers.
 
-## Installlation
+## Installation
 Now, hold on. This ain't even public yet.
 
 > \[!NOTE]
 > ### Updates
->> #### Branch v0.0 (0.0.3)
->> - Subtasks:
->>   - There are subtasks now
->>   - When task is completed all subtasks are automatically checked off, and viceversa
->> - Added comments, still missing most
->> - There is time metadata now, I will use it when the time is right
->>   
->> #### Branch v0.0 (0.0.2)
->> - Overhauled storage method to use JSON files instead of saving as HTML with its UI embbeded
->> - Tasks are now classes instead with unique IDs, titles and a completed state
->>      - This will make adding nested tasks and embedding other information in tasks easier, when it's time to add them
->> - Added more comments to the script.js code (still more to add, but I'm making progress)
->> - Added 'Enter' keyboard shorcut to add tasks (life is beautiful now)
+>> #### ## [0.1] - 2026-03-01 - Branch v0.0 
+>> ### Added
+>> - Added a changelod.md file for better/more organized documentation
+>> - Game selection page (will now become the main page)
+>> - Toggle functionality to hide/expand task's subtasks and the task's subtasks' subtasks
 >>
->> #### Branch v0.0 (0.0.1) -- Pushed to main
->> - The 'X' button is no longer lost. Fixed broken code preventing for the 'X' tobe displayed.
->> - Added 'HeroIcons' (The 'X' button)
+>> ### Changed
+>> - Game (the tasks page) is no longer the main page of the app
+>>    - Tasks are now accessed by selecting a game in the selection page
+>> - Improved the UI with the design made in the first design sprint
+>>    - Most of the update has been to support the new UI with the already stablished functionalities
 >>
->> #### v0.0.0
->> - Changed the custom CSS to use the TailwindCSS + DaisyUI libraries
->>      - Installed DaisyUI 5.5.14
->>      - Installed TailwindCSS v4.1.18
->> - Checkbox now uses DaisyUI component instead of custom images and code
->>      - Modified the script.js file to reflect this
->> - Deleted previous the placeholder images files
->> - Deleted all custom CSS except for the background's gradient which is now surface
->> - Website now reads the styles from public/output.css instead
->> - Added some comments to explain parts of the code (More are missing and coming soon)
->> - Added a "Reset" button to clear all tasks
+>> ### Fixed
+>> - Separated script.js into multiple files using the separation of concerns as a guidance, since it was getting difficult to scale and refactor
+>>    - It now lives as:
+>>        - icons, logic, main, models, render, state, storage & events[.games & .tasks] .js
+>>    - Divided events into 2 files, since it was not possible to operate both pages (homepage and game) while in the same file
 
 ## Upcoming changes
-- Working on design and systems for version 0.1 (Alpha)
+- Code a working prototype of Design Sprint #1 for version 1.0 (Alpha)
 
 ## Branch BarebonesApp
 This is the first ever version of this app. It was built with custom CSS with this [YouTube tutorial](https://youtu.be/G0jO8kUrg-I?si=6fqAX5_d_Y60PDST).
