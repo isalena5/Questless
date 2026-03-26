@@ -47,9 +47,12 @@
                             </button>
 
                             <form class="filter btn-accent">
-                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks" aria-label="Filter 1" />
-                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks" aria-label="Filter 2" />
-                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks" aria-label="Filter 3" />
+                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks"
+                                    aria-label="Filter 1" />
+                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks"
+                                    aria-label="Filter 2" />
+                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks"
+                                    aria-label="Filter 3" />
                                 <input class="btn btn-sm rounded-full" type="reset" value="×" />
                             </form>
 
@@ -74,6 +77,18 @@
         </div>
     </div>
     <script type="module" src="./js/main.js"></script>
+
+    <!-- Delete All - Warning Modal-->
+    <dialog id="my_modal_1" class="modal">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">WARNING</h3>
+            <p class="py-4">Are you sure you want to delete ALL objectives in the current game?</p>
+            <div class="modal-action">
+                <button id="confirm-delete-all" class="btn btn-error">Delete</button>
+                <button id="cancel-delete-all" class="btn btn-primary">Cancel</button>
+            </div>
+        </div>
+    </dialog>
 
 </body>
 

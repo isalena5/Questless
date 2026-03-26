@@ -1,15 +1,17 @@
-import { addTask, addSubtask, toggleTask, deleteTask, deleteAll, findTaskInGame, findParentTask, collapseIfEmpty } from "./logic.js";
+import { addTask, addSubtask, toggleTask, deleteTask, deleteAll, findTaskInGame, findParentTask, collapseIfEmpty, reorderTasks } from "./logic.js";
 import { saveTasks } from "./storage.js";
 import { render } from "./render.js";
 import { appState } from "./state.js";
 
+/*
+==========================================================
 
-/* const DOM = {
-    inputBox: document.getElementById("input-box"), // References input field of tasks
-    listContainer: document.getElementById("list-container"), // References the container <ul> that holds all tasks
-    addBtn: document.getElementById("add-btn"),
-    resetBtn: document.getElementById("reset-btn")
-} */
+------------------- Global Variables ---------------------
+
+==========================================================
+*/
+
+let draggedTaskId = null;   // Tracks which task is currently being dragged
 
 
 /*
@@ -19,7 +21,7 @@ import { appState } from "./state.js";
 
 ==========================================================
 */
-function getTaskIdFromEvent(e) {        // Extract taskId safely from event target 
+function getTaskIdFromEvent(e) {        // Extract taskId (safely) from event target 
     const li = e.target.closest("li");
     return li ? li.dataset.id : null;
 }
@@ -32,7 +34,7 @@ function getTaskIdFromEvent(e) {        // Extract taskId safely from event targ
 
 ==========================================================
 */
-function handleAddTask(inputBox) {      // Shared handler for adding a parent task
+function handleAddTask(inputBox) {      // Shared handler (btns & 'enter' key) for adding a parent task
     const title = inputBox.value.trim();
     if (!title) {
         return;
@@ -41,6 +43,14 @@ function handleAddTask(inputBox) {      // Shared handler for adding a parent ta
     addTask(title);
     inputBox.value = "";
 }
+
+
+
+
+
+//////////////////////////////////////////////////////////
+
+
 
 
 /*
@@ -56,6 +66,11 @@ export function initTaskEvents() {
     const listContainer = document.getElementById("list-container");
     const addBtn = document.getElementById("add-btn-js");
     const resetBtn = document.getElementById("deleteAll-btn-js");
+
+    // Modal elements
+    const modal = document.getElementById("my_modal_1");
+    const confirmBtn = document.getElementById("confirm-delete-all");
+    const cancelBtn = document.getElementById("cancel-delete-all");
 
 
     /*
@@ -77,7 +92,7 @@ export function initTaskEvents() {
             const newTaskId = taskId;
             const prevTaskId = appState.creatingSubtaskFor;
 
-            if (prevTaskId && prevTaskId !== newTaskId) {       // Collapse previous if still empty (no added tasks)
+            if (prevTaskId && prevTaskId !== newTaskId) {       // Collapse previous empty task if still empty (no added tasks)
                 collapseIfEmpty(prevTaskId);
             }
 
@@ -89,7 +104,7 @@ export function initTaskEvents() {
             const isExpanded = swapCheckbox.checked;
             task.expanded = isExpanded;
 
-            if (isExpanded) {                                   // Track which task accepts subtasks
+            if (isExpanded) {                                   // Track which task is being added subtasks to
                 appState.creatingSubtaskFor = newTaskId;
             }
 
@@ -117,8 +132,54 @@ export function initTaskEvents() {
 
 
 
+
     /*
-    * Delete btn click Event
+    * Drag functionality Events
+    */
+
+    listContainer.addEventListener("dragstart", (e) => {
+        const handle = e.target.closest(".drag-handle");
+        if (!handle) {
+            e.preventDefault();     // Only allow drag from handle
+            return;
+        }
+
+        const li = handle.closest("li");
+        if (!li) {
+            return;
+        }
+
+        draggedTaskId = li.dataset.id;
+    });
+
+    listContainer.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    });
+
+    listContainer.addEventListener("drop", (e) => {
+        const li = e.target.closest("li");
+        if (!li || !draggedTaskId) {
+            return;
+        }
+
+        const targetId = li.dataset.id;
+
+        if (draggedTaskId === targetId) {       // prevent self-drop
+            return;
+        }
+
+        reorderTasks(draggedTaskId, targetId);
+
+        draggedTaskId = null;
+        saveTasks();
+        render();
+    });
+
+
+
+
+    /*
+    * Delete btn (one task) click Event
     */
 
     listContainer.addEventListener("click",
@@ -136,7 +197,6 @@ export function initTaskEvents() {
             deleteTask(taskId);
 
         });
-
 
 
     /*
@@ -210,9 +270,20 @@ export function initTaskEvents() {
 
 
     /*
-    * Delete all tasks
+    * Delete all tasks & modal
     */
-    resetBtn.addEventListener("click", () => deleteAll());
+    resetBtn.addEventListener("click", () => {
+        modal.showModal();
+    });
+
+    confirmBtn.addEventListener("click", () => {
+        deleteAll();
+        modal.close();
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        modal.close();
+    });
 
 
 
@@ -234,7 +305,9 @@ export function initTaskEvents() {
         render();
     });
 
-    // On Page load
+
+    
+    // Initial Page load
     saveTasks();
     render();
 }

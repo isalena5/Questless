@@ -6,23 +6,15 @@ Now, hold on. This ain't even public yet.
 
 > \[!NOTE]
 > ### Updates
->> #### Pre-Alfa [0.1] - 2026-03-01 - Branch v0.1 
+>> #### Pre-Alfa [0.1.1] - 2026-03-25 - Branch v0.1
 >> ### Added
->> - Added a changelod.md file for better/more organized documentation
->> - Game selection page (will now become the main page)
->> - Toggle functionality to hide/expand task's subtasks and the task's subtasks' subtasks
->>
->> ### Changed
->> - Game (the tasks page) is no longer the main page of the app
->>    - Tasks are now accessed by selecting a game in the selection page
->> - Improved the UI with the design made in the first design sprint
->>    - Most of the update has been to support the new UI with the already stablished functionalities
+>> - Drag functionality within same level tasks
+>> - Delete All now has a warning modal to avoid accidental resets that induce mental breakdowns
+>> - Added more comments
 >>
 >> ### Fixed
->> - Separated script.js into multiple files using the separation of concerns as a guidance, since it was getting difficult to scale and refactor
->>    - It now lives as:
->>        - icons, logic, main, models, render, state, storage & events[.games & .tasks] .js
->>    - Divided events into 2 files, since it was not possible to operate both pages (homepage and game) while in the same file
+>> - Fixed some comments
+>> - Recursive completion now works with current UI
 
 ## Upcoming changes
 - Code a working prototype of Design Sprint #1 for version 1.0 (Alpha)

@@ -46,8 +46,11 @@ function createTaskRow(task, level = 0) {
     <div class="flex items-center gap-3 flex-1 list-row">
         
         ${renderLeftControls(task, level, hasSubtasks)}
-        ${level === 2 ? `<div class="ml-8">
-            ${iconDrag}
+        ${level === 2 ? `
+            <div class="ml-8">
+                <div class="drag-handle" draggable="true">
+                ${iconDrag}
+                </div>
             </div>` : ""}
 
         <input type="checkbox" class="checkbox checkbox-lg checkbox-primary" ${task.completed ? "checked" : ""} />
@@ -109,6 +112,7 @@ function createTaskElement(task, level) {
     const li = document.createElement("li");
     li.className = "flex items-center gap-3";
     li.dataset.id = task.id;
+    li.draggable = true;                      // Make it dragable
     li.style.marginLeft = `${level * 38}px`; // dynamic indent
 
     li.innerHTML = createTaskRow(task, level);
@@ -125,7 +129,9 @@ function createTaskElement(task, level) {
 function renderLeftControls(task, level, hasSubtasks) {
     if (level <= 1) {
         return `
-            ${iconDrag}
+            <div class="drag-handle" draggable="true">
+                ${iconDrag}
+            </div>
             <label class="swap swap-flip ${!hasSubtasks ? "opacity-30" : ""}">
                 <input type="checkbox" ${task.expanded ? "checked" : ""} />
                 ${arrowIcon("right")}
@@ -160,6 +166,9 @@ function renderInputIfActive(task, container, level) {
 
     container.appendChild(inputLi);
 }
+
+
+
 
 
 /*

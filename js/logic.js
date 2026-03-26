@@ -3,24 +3,56 @@ import { Game, Group, Task } from "./models.js";
 import { saveTasks } from "./storage.js";
 import { render } from "./render.js";
 
+// Commit
 function commit() {
     saveTasks();
     render();
 }
 
+
+
+
+/*
+==========================================================
+
+------------------- Get Active Game ID -------------------
+
+==========================================================
+*/
 function getActiveGame() {
     return appState.games.find(g => g.id === appState.activeGameId);
 }
 
-export function addGame(name) {
+
+
+
+/*
+==========================================================
+
+----------------- Create New Game in App -----------------
+
+==========================================================
+*/
+export function addGame(name) {   
     const newGame = new Game(name);
 
     appState.games.push(newGame);
-    appState.activeGameId = newGame.id;
+    appState.activeGameId = newGame.id;     // Switch new game to active game
 
     commit();
 }
 
+
+
+
+
+/*
+==========================================================
+
+--------- Create Groups (of tasks) Inside Games ----------
+
+==========================================================
+*/
 export function addGroup(name) {
     const game = getActiveGame();
     if (!game) {
@@ -33,6 +65,84 @@ export function addGroup(name) {
     commit();
 }
 
+
+
+/*
+==========================================================
+
+----------------------- Drag Tasks -----------------------
+
+==========================================================
+*/
+// * - Tasks can only move within same level
+//
+
+export function reorderTasks(draggedId, targetId) {     // Moves dragged task before target task
+    if (draggedId === targetId) {
+        return;
+    }
+
+    const game = appState.games.find(g => g.id === appState.activeGameId);
+    if (!game) {
+        return;
+    }
+
+    // Find both parents arrays are before moving
+    const draggedParent = findParentArray(game.tasks, draggedId);
+    const targetParent = findParentArray(game.tasks, targetId);
+
+    if (!draggedParent || !targetParent) {
+        return;
+    }
+
+    // Block cross-level drag
+    if (draggedParent !== targetParent) {      // If task is not in the same level,
+        return;                                 // do nothing
+    }
+
+    const fromIndex = draggedParent.findIndex(t => t.id === draggedId);
+    const toIndex = targetParent.findIndex(t => t.id === targetId);
+
+    if (fromIndex === -1 || toIndex === -1) {
+        return;
+    }
+
+    // Insert before target
+    const [moved] = draggedParent.splice(fromIndex, 1);
+    targetParent.splice(toIndex, 0, moved);
+}
+
+
+
+
+/*
+==========================================================
+
+------------------- Find Parent Array --------------------
+
+==========================================================
+*/
+function findParentArray(tasks, targetId) {     // Find parent array containing target (recursively)
+    for (let task of tasks) {
+        if (task.id === targetId) {
+            return tasks;
+        }
+
+        if (task.subtasks) {
+            const found = findParentArray(task.subtasks, targetId);
+            if (found) {
+                return found;
+            }
+        }
+    }
+    return null;
+}
+
+
+
+
+
+
 /*
 ==========================================================
 
@@ -40,6 +150,8 @@ export function addGroup(name) {
 
 ==========================================================
 */
+//  Still not in use, have to implement Groups in UI first
+//
 
 function addTaskToGroup(groupId, title) {
     const game = getActiveGame();
@@ -65,12 +177,11 @@ function addTaskToGroup(groupId, title) {
 /*
 ==========================================================
 
------------------------- Add Task ------------------------
+-------------------- Add Parent Task ---------------------
 
 ==========================================================
 */
-
-export function addTask(title) {
+export function addTask(title) {    // Just for standalone tasks, not grouped
     const game = getActiveGame();
     if (!game || !title.trim()) {
         return;
@@ -91,8 +202,7 @@ export function addTask(title) {
 
 ==========================================================
 */
-
-export function addSubtask(parentId, title) {
+export function addSubtask(parentId, title) {       
     const task = findTaskInGame(parentId);
     if (!task || !task.subtasks) {
         return;
@@ -100,38 +210,6 @@ export function addSubtask(parentId, title) {
 
     const newSubtask = new Task(title.trim(), task.level + 1);
     task.subtasks.push(newSubtask);
-
-    commit();
-}
-
-
-
-/*
-==========================================================
-
----------------------- Delete Game -----------------------
-
-==========================================================
-*/
-
-export function deleteGame(gameId) {
-    const index = appState.games.findIndex(g => g.id === gameId);
-    if (index === -1) {
-        return;
-    }
-
-    const wasActive = appState.activeGameId === gameId;
-
-    appState.games.splice(index, 1);    // Remove Game
-
-    // if deleted game was active, switch to next id
-    if (wasActive) {
-        if (appState.games.length > 0) {
-            appState.activeGameId = appState.games[0].id;
-        } else {
-            addGame("Default Game");
-        }
-    }
 
     commit();
 }
@@ -146,10 +224,11 @@ export function deleteGame(gameId) {
 
 ==========================================================
 */
-
 export function deleteTask(taskId) {        // Delete task by their ID
     const game = getActiveGame();
-    if (!game) return;
+    if (!game) {
+        return;
+    }
 
     // Standalone
     const standaloneIndex = game.tasks.findIndex(t => t.id === taskId);
@@ -169,7 +248,7 @@ export function deleteTask(taskId) {        // Delete task by their ID
         }
     }
 
-    // Delete in subtasks
+    // Delete in subtasks (recursive)
     for (let task of game.tasks) {
         if (deleteFromSubtasks(task, taskId)) {
             commit();
@@ -187,8 +266,21 @@ export function deleteTask(taskId) {        // Delete task by their ID
     }
 }
 
+
+
+
+
+/*
+==========================================================
+
+-------------------- Delete Subtask ----------------------
+
+==========================================================
+*/
 function deleteFromSubtasks(task, taskId) {
-    if (!task.subtasks) return false;
+    if (!task.subtasks) { 
+        return false;
+    }
 
     const index = task.subtasks.findIndex(t => t.id === taskId);
     if (index !== -1) {
@@ -207,6 +299,8 @@ function deleteFromSubtasks(task, taskId) {
 
 
 
+
+
 /*
 ==========================================================
 
@@ -214,8 +308,7 @@ function deleteFromSubtasks(task, taskId) {
 
 ==========================================================
 */
-
-export function deleteAll() {
+export function deleteAll() {       // Deletes all tasks inside current game
     const game = getActiveGame();
     if (!game) {
         return;
@@ -228,6 +321,39 @@ export function deleteAll() {
 }
 
 
+
+
+/*
+==========================================================
+
+---------------------- Delete Game -----------------------
+
+==========================================================
+*/
+export function deleteGame(gameId) {
+    const index = appState.games.findIndex(g => g.id === gameId);
+    if (index === -1) {
+        return;
+    }
+
+    const wasActive = appState.activeGameId === gameId;
+
+    appState.games.splice(index, 1);    // Remove Game
+
+    if (wasActive) {                    // If deleted game was active, switch to next id
+        if (appState.games.length > 0) {
+            appState.activeGameId = appState.games[0].id;
+        } else {
+            addGame("Default Game");
+        }
+    }
+
+    commit();
+}
+
+
+
+
 /*
 ==========================================================
 
@@ -235,7 +361,6 @@ export function deleteAll() {
 
 ==========================================================
 */
-
 export function findTaskInGame(taskId) {
     const game = getActiveGame();
     if (!game) {
@@ -266,6 +391,7 @@ export function findTaskInGame(taskId) {
 
 
 
+
 /*
 ==========================================================
 
@@ -273,8 +399,7 @@ export function findTaskInGame(taskId) {
 
 ==========================================================
 */
-
-function searchTask(task, taskId) {
+function searchTask(task, taskId) {     // Search recursively
     if (task.id === taskId) {
         return task;
     }
@@ -295,6 +420,7 @@ function searchTask(task, taskId) {
 
 
 
+
 /*
 ==========================================================
 
@@ -302,18 +428,56 @@ function searchTask(task, taskId) {
 
 ==========================================================
 */
-
 export function toggleTask(taskId) {
     const task = findTaskInGame(taskId);
     if (!task) {
         return;
     }
 
-    task.completed = !task.completed;
-    saveTasks();
+    const newState = !task.completed;
+
+    // Apply to parent task and all children (down)
+    toggleDown(task, newState);
+
+    // Match parent task to subtasks (up)
+    updateParents(taskId);
+
+    commit();
 
 }
 
+function toggleDown(task, state) {
+    task.completed = state;
+
+    if (task.subtasks) {
+        task.subtasks.forEach(sub => toggleDown(sub, state));
+    }
+}
+
+function updateParents(taskId) {
+    const parent = findParentTask(taskId);
+    if (!parent) {
+        return;
+    }
+
+    const allDone = parent.subtasks.every(t => t.completed);
+
+    parent.completed = allDone;
+
+    updateParents(parent.id); // upwards recursively
+}
+
+
+
+
+
+/*
+==========================================================
+
+------------------ Find Parent of Task -------------------
+
+==========================================================
+*/
 export function findParentTask(childId, tasks = appState.games.find(g => g.id === appState.activeGameId)?.tasks) {
     for (const task of tasks) {
         if (task.subtasks?.some(sub => sub.id === childId)) {
@@ -327,6 +491,17 @@ export function findParentTask(childId, tasks = appState.games.find(g => g.id ==
     return null;
 }
 
+
+
+
+
+/*
+==========================================================
+
+--------- Collapse entire task tree (UI Reset) -----------
+
+==========================================================
+*/
 export function collapseAllSubtasks(tasks) {
     tasks.forEach(task => {
         task.expanded = false;
@@ -334,7 +509,18 @@ export function collapseAllSubtasks(tasks) {
     });
 }
 
-export function collapseIfEmpty(taskId) {
+
+
+
+
+/*
+==========================================================
+
+----------------- Collapse Empty Tasks -------------------
+
+==========================================================
+*/
+export function collapseIfEmpty(taskId) {       // Collapse empty tasks when user leaves input
     if (!taskId) {
         return;
     }

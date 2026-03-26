@@ -4,7 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
-## [0.1] Pre-Alfa - 2026-03-01 - Branch v0.1
+## [0.1.1] Pre-Alfa - 2026-03-25 - Branch v0.1
+### Added
+- Drag functionality within same level tasks
+- Delete All now has a warning modal to avoid accidental resets that induce mental breakdowns
+- Added more comments
+
+### Fixed
+- Fixed some comments
+- Recursive completion now works with current UI
+
+## [0.1.0] Pre-Alfa - 2026-03-24 - Branch v0.1
 ### Added
 - Added a changelod.md file for better/more organized documentation
 - Game selection page (will now become the main page)
