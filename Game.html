@@ -28,7 +28,7 @@
                         <path
                             d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                     </svg>
-                    Add to list</button>
+                    Add</button>
             </div>
 
             <div class="card flex bg-base-100 shadow-xl">
@@ -36,7 +36,7 @@
                     <!-- Filter top bar -->
                     <div class="sorting-bar px-6 py-5">
                         <div class="flex grid-cols-2 items-center justify-center gap-2">
-                            <button type="button" class="btn btn-ghost btn-md text-neutral hover:bg-neutral/5">
+                            <button type="button" class="btn btn-ghost btn-md text-accent-content hover:bg-neutral/5">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                     class="size-4">
                                     <path fill-rule="evenodd"
@@ -47,13 +47,13 @@
                             </button>
 
                             <form class="filter btn-accent">
-                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks"
+                                <input class="btn btn-sm rounded-full text-accent-content" type="radio" name="frameworks"
                                     aria-label="Filter 1" />
-                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks"
+                                <input class="btn btn-sm rounded-full text-accent-content" type="radio" name="frameworks"
                                     aria-label="Filter 2" />
-                                <input class="btn btn-sm rounded-full" type="radio" name="frameworks"
+                                <input class="btn btn-sm rounded-full text-accent-content" type="radio" name="frameworks"
                                     aria-label="Filter 3" />
-                                <input class="btn btn-sm rounded-full" type="reset" value="×" />
+                                <input class="btn btn-sm rounded-full text-accent-content" type="reset" value="×" />
                             </form>
 
                         </div>
@@ -78,18 +78,23 @@
     </div>
     <script type="module" src="./js/main.js"></script>
 
-    <!-- Delete All - Warning Modal-->
+    <!-- Warning Modal -->
     <dialog id="my_modal_1" class="modal">
         <div class="modal-box">
-            <h3 class="text-lg font-bold">WARNING</h3>
-            <p class="py-4">Are you sure you want to delete ALL objectives in the current game?</p>
+            <h3 id="confirm-modal-title" class="text-lg font-bold">Confirm action</h3>
+            <p id="confirm-modal-message" class="py-4">Are you sure?</p>
+
             <div class="modal-action">
-                <button id="confirm-delete-all" class="btn btn-error">Delete</button>
-                <button id="cancel-delete-all" class="btn btn-primary">Cancel</button>
+                <button id="confirm-delete-all" class="btn btn-error">Confirm</button>
+                <button id="cancel-delete-all" class="btn">Cancel</button>
             </div>
         </div>
     </dialog>
 
+    <!-- Side-drawer for Tasks -->
+    <div id="task-detail-panel" class="fixed right-0 top-0 h-full w-160 bg-base-200 shadow-lg hidden px-[60px]">
+        <div></div>
+    </div>
 </body>
 
 </html>

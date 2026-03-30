@@ -3,8 +3,17 @@ import { Game, Group, Task } from "./models.js";
 import { saveTasks } from "./storage.js";
 import { render } from "./render.js";
 
-// Commit
-function commit() {
+
+/*
+==========================================================
+
+--------------------- Commit Helper ----------------------
+
+==========================================================
+*/
+// Special cases:
+// - Not used for toggle
+function commit() {     // Call this after modifying state
     saveTasks();
     render();
 }
@@ -19,7 +28,7 @@ function commit() {
 
 ==========================================================
 */
-function getActiveGame() {
+function getActiveGame() {  // Return the currently active game object
     return appState.games.find(g => g.id === appState.activeGameId);
 }
 
@@ -29,7 +38,7 @@ function getActiveGame() {
 /*
 ==========================================================
 
------------------ Create New Game in App -----------------
+-------------------- Create New Game ---------------------
 
 ==========================================================
 */
@@ -41,8 +50,6 @@ export function addGame(name) {
 
     commit();
 }
-
-
 
 
 
@@ -67,6 +74,7 @@ export function addGroup(name) {
 
 
 
+
 /*
 ==========================================================
 
@@ -87,7 +95,7 @@ export function reorderTasks(draggedId, targetId) {     // Moves dragged task be
         return;
     }
 
-    // Find both parents arrays are before moving
+    // Find which are both parents arrays before moving
     const draggedParent = findParentArray(game.tasks, draggedId);
     const targetParent = findParentArray(game.tasks, targetId);
 
@@ -95,9 +103,9 @@ export function reorderTasks(draggedId, targetId) {     // Moves dragged task be
         return;
     }
 
-    // Block cross-level drag
+    // Prevent cross-level drag
     if (draggedParent !== targetParent) {      // If task is not in the same level,
-        return;                                 // do nothing
+        return;                                // do nothing
     }
 
     const fromIndex = draggedParent.findIndex(t => t.id === draggedId);
@@ -142,7 +150,6 @@ function findParentArray(tasks, targetId) {     // Find parent array containing 
 
 
 
-
 /*
 ==========================================================
 
@@ -150,9 +157,8 @@ function findParentArray(tasks, targetId) {     // Find parent array containing 
 
 ==========================================================
 */
-//  Still not in use, have to implement Groups in UI first
+//  (Not used yet in program)
 //
-
 function addTaskToGroup(groupId, title) {
     const game = getActiveGame();
 
@@ -183,7 +189,8 @@ function addTaskToGroup(groupId, title) {
 */
 export function addTask(title) {    // Just for standalone tasks, not grouped
     const game = getActiveGame();
-    if (!game || !title.trim()) {
+
+    if (!game || !title.trim()) {   // Prevent empty tasks or invalid state
         return;
     }
 
@@ -204,7 +211,8 @@ export function addTask(title) {    // Just for standalone tasks, not grouped
 */
 export function addSubtask(parentId, title) {       
     const task = findTaskInGame(parentId);
-    if (!task || !task.subtasks) {
+
+    if (!task || !task.subtasks) {      // Cannot add if task doesn't exist or cannot have children
         return;
     }
 
@@ -277,7 +285,7 @@ export function deleteTask(taskId) {        // Delete task by their ID
 
 ==========================================================
 */
-function deleteFromSubtasks(task, taskId) {
+function deleteFromSubtasks(task, taskId) {         // Recursively removes a task from nested subtasks
     if (!task.subtasks) { 
         return false;
     }
@@ -308,14 +316,14 @@ function deleteFromSubtasks(task, taskId) {
 
 ==========================================================
 */
-export function deleteAll() {       // Deletes all tasks inside current game
+export function deleteAll() {                           // Deletes all tasks inside current game
     const game = getActiveGame();
     if (!game) {
         return;
     }
 
-    game.tasks = [];
-    game.groups.forEach(group => group.tasks = []);
+    game.tasks = [];                                    // Clear standalone tasks
+    game.groups.forEach(group => group.tasks = []);     // Clear all group tasks
 
     commit();
 }
@@ -391,7 +399,6 @@ export function findTaskInGame(taskId) {
 
 
 
-
 /*
 ==========================================================
 
@@ -399,7 +406,7 @@ export function findTaskInGame(taskId) {
 
 ==========================================================
 */
-function searchTask(task, taskId) {     // Search recursively
+function searchTask(task, taskId) {     // Search recursively through task tree
     if (task.id === taskId) {
         return task;
     }
@@ -420,7 +427,6 @@ function searchTask(task, taskId) {     // Search recursively
 
 
 
-
 /*
 ==========================================================
 
@@ -436,17 +442,15 @@ export function toggleTask(taskId) {
 
     const newState = !task.completed;
 
-    // Apply to parent task and all children (down)
-    toggleDown(task, newState);
+    toggleDown(task, newState);         // Apply to parent task and all children (down)
 
-    // Match parent task to subtasks (up)
-    updateParents(taskId);
+    updateParents(taskId);              // Match parent task to subtasks (up)
 
-    commit();
+    saveTasks();                        // No render, it's handled by events
 
 }
 
-function toggleDown(task, state) {
+function toggleDown(task, state) {      // Recursively apply state downward
     task.completed = state;
 
     if (task.subtasks) {
@@ -454,7 +458,7 @@ function toggleDown(task, state) {
     }
 }
 
-function updateParents(taskId) {
+function updateParents(taskId) {        // Update parent based on children
     const parent = findParentTask(taskId);
     if (!parent) {
         return;
@@ -466,8 +470,6 @@ function updateParents(taskId) {
 
     updateParents(parent.id); // upwards recursively
 }
-
-
 
 
 
@@ -493,8 +495,6 @@ export function findParentTask(childId, tasks = appState.games.find(g => g.id ==
 
 
 
-
-
 /*
 ==========================================================
 
@@ -508,8 +508,6 @@ export function collapseAllSubtasks(tasks) {
         if (task.subtasks) collapseAllSubtasks(task.subtasks);
     });
 }
-
-
 
 
 

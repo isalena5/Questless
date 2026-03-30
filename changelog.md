@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
+## [0.2] Pre-Alfa - 2026-03-29 - Branch v0.1
+### Added
+- Root task details through a side-drawer
+    - View title, description, and this root task's children and grand-children
+    - Description property inside the root task's class
+    - Edit title and description of root task
+    - System to track unsaved changes within the drawer
+- More detailed comments because I keep getting lost in my own code if more than 8hrs pass without me working on it
+- Module to confirm discard changes when editing title or description in the side-drawer
+
+### Fixed
+- Checkbox animation that I didn't realized I broke last update
+
+### Changed
+- DaisyUI Theme colours to better comply with WCAG:
+    - Base 100-300 colours
+    - Primary colour
+- Filter buttons and "Last played" button's (in Game.html) text colour to correct one
+- Same module is now used in two instances, making this module reusable
+- Button copy from "Add to list" to "Add" (Based off User Testing findings)
+
 ## [0.1.1] Pre-Alfa - 2026-03-25 - Branch v0.1
 ### Added
 - Drag functionality within same level tasks

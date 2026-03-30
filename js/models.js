@@ -22,6 +22,7 @@ export class Task {
         this.completed = false;        // Tracks whether the track's done or not
         this.tags = [];
         this.images = [];
+        this.description = "";
 
         // Date & Time the task was created at 
         this.createdAt = new Date().toISOString();
@@ -31,8 +32,7 @@ export class Task {
         this.subtasks = level < 2 ? [] : null; // If level is equal to 2, no more subtasks can be created
 
         // this.tags = []; ---> Create addToArray (categories) function. **
-        // Create assignCategories function 
-        // MORE GRANDCHILDREN (1 more level)
+        // Create assignCategories function
         // this.colour; **
         // this.description; ***
         // this.gallery; ***
