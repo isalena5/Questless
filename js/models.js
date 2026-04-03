@@ -4,6 +4,7 @@ export class Game {
         this.name = name;
         this.groups = [];
         this.tasks = [];
+        this.coverURL = "../covers/default.png";
     }
 }
 

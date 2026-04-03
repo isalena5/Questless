@@ -43,6 +43,18 @@
 --------------------------------------------
 */
 
+.image-game:hover {
+    cursor: pointer;
+}
+
+#list-container .drag-handle {
+    cursor: grab;
+}
+
+#list-container .drag-handle:active {
+    cursor: grabbing;
+}
+
 .surface {
     width: 100%;
     min-height: 100vh;

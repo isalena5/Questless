@@ -538,3 +538,28 @@ export function collapseIfEmpty(taskId) {       // Collapse empty tasks when use
         }
     }
 }
+
+/*
+==========================================================
+
+------------------- Rename Game Title --------------------
+
+==========================================================
+*/
+export function renameGame(gameId, name) {
+  const nextName = String(name ?? "").trim();       // Normalize title format
+
+  if (!nextName) {                                  // Block empty names to not save a blank label into state
+    return false;
+  }
+
+  const game = appState.games.find((g) => String(g.id) === String(gameId));     // Compare ids safely
+
+  if (!game) {
+    return false;
+  }
+
+  game.name = nextName;     // Apply change directly to app state
+  saveTasks();              // Persist changes so refresh/navigation keeps the rename
+  return true;
+}
