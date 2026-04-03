@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
+## [p1] Presentation Prototype - 2026-04-02 - Branch Presentation
+### Originally presented on March 30th, 2026
+### Added
+- New branch to store the prototypes used in presentations
+- Dev function to temporarily add custom images
+    - Functionality will vary in the final release
+    - This is meant to be a placeholder until I develop the process for users
+- Edit Game title functionality in homepage
+- Breadcrumbs update automatically (no longer static text)
+    - Automatically displays current Game
+    - Links back to the homepage
+
+### Fixed
+- Homepage
+    - Edit title button now functional
+    - On click, card leads to correct Game id
+
+### Changed
+- Mouse pointers show correct pointer:
+    - Drag button has a drag cursor pointer
+    - Root tasks now show you can click on them through the cursor pointer
+
 ## [0.2.1] Pre-Alfa - 2026-04-02 - Branch v0.1
 ### Added
 - Edit Game title functionality in homepage
