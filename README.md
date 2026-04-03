@@ -6,7 +6,7 @@ Now, hold on. This ain't even public yet.
 
 > \[!NOTE]
 > ### Updates
->> #### Pre-Alfa [0.2.1] - 2026-04-02 - Branch v0.1
+>> #### Pre-Alfa [0.2.1] - 2026-04-02 - Branch v0.x
 >> ### Added
 >> - Edit Game title functionality in homepage
 >> - Breadcrumbs update automatically (no longer static text)
@@ -22,7 +22,7 @@ Now, hold on. This ain't even public yet.
 >> - Mouse pointers show correct pointer:
 >>    - Drag button has a drag cursor pointer
 >>    - Root tasks now show you can click on them through the cursor pointer
->> 
+>> - Branch v0.1 renamed to v0.x
 
 
 ## Upcoming changes

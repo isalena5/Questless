@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
-## [0.2.1] Pre-Alfa - 2026-04-02 - Branch v0.1
+## [0.2.1] Pre-Alfa - 2026-04-02 - Branch v0.x
 ### Added
 - Edit Game title functionality in homepage
 - Breadcrumbs update automatically (no longer static text)
@@ -20,8 +20,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Mouse pointers show correct pointer:
     - Drag button has a drag cursor pointer
     - Root tasks now show you can click on them through the cursor pointer
+- Branch v0.1 renamed to v0.x
 
-## [0.2.0] Pre-Alfa - 2026-03-29 - Branch v0.1
+## [0.2.0] Pre-Alfa - 2026-03-29 - Branch v0.x
 ### Added
 - Root task details through a side-drawer
     - View title, description, and this root task's children and grand-children
@@ -42,7 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Same module is now used in two instances, making this module reusable
 - Button copy from "Add to list" to "Add" (Based off User Testing findings)
 
-## [0.1.1] Pre-Alfa - 2026-03-25 - Branch v0.1
+## [0.1.1] Pre-Alfa - 2026-03-25 - Branch v0.x
 ### Added
 - Drag functionality within same level tasks
 - Delete All now has a warning modal to avoid accidental resets that induce mental breakdowns
@@ -52,7 +53,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed some comments
 - Recursive completion now works with current UI
 
-## [0.1.0] Pre-Alfa - 2026-03-24 - Branch v0.1
+## [0.1.0] Pre-Alfa - 2026-03-24 - Branch v0.x
 ### Added
 - Added a changelod.md file for better/more organized documentation
 - Game selection page (will now become the main page)
