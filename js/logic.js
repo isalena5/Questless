@@ -20,6 +20,32 @@ function commit() {     // Call this after modifying state
 
 
 
+/*
+==========================================================
+
+------------------- Undo Snapshot API --------------------
+
+==========================================================
+*/
+
+// Call BEFORE a change you want to undo (one-step undo)
+export function recordUndoSnapshot() {
+    appState.undoSnapshot = JSON.parse(JSON.stringify(appState.games));     // Simple (JSON) deep clone of games
+}
+
+// Restore the last snapshot
+export function undoLastChange() {
+    if (!appState.undoSnapshot) {
+        return false;
+    }
+
+    appState.games = appState.undoSnapshot;
+    appState.undoSnapshot = null;
+
+    saveTasks();
+    return true;
+}
+
 
 /*
 ==========================================================
@@ -42,7 +68,7 @@ function getActiveGame() {  // Return the currently active game object
 
 ==========================================================
 */
-export function addGame(name) {   
+export function addGame(name) {
     const newGame = new Game(name);
 
     appState.games.push(newGame);
@@ -62,6 +88,8 @@ export function addGame(name) {
 */
 export function addGroup(name) {
     const game = getActiveGame();
+
+    // Stop safely if the active game is missing
     if (!game) {
         return;
     }
@@ -95,7 +123,7 @@ export function reorderTasks(draggedId, targetId) {     // Moves dragged task be
         return;
     }
 
-    // Find which are both parents arrays before moving
+    // Find the parent arrays for both tasks
     const draggedParent = findParentArray(game.tasks, draggedId);
     const targetParent = findParentArray(game.tasks, targetId);
 
@@ -130,7 +158,7 @@ export function reorderTasks(draggedId, targetId) {     // Moves dragged task be
 
 ==========================================================
 */
-function findParentArray(tasks, targetId) {     // Find parent array containing target (recursively)
+function findParentArray(tasks, targetId) {     // Returns the array that contains targetId (recursively)
     for (let task of tasks) {
         if (task.id === targetId) {
             return tasks;
@@ -209,7 +237,7 @@ export function addTask(title) {    // Just for standalone tasks, not grouped
 
 ==========================================================
 */
-export function addSubtask(parentId, title) {       
+export function addSubtask(parentId, title) {
     const task = findTaskInGame(parentId);
 
     if (!task || !task.subtasks) {      // Cannot add if task doesn't exist or cannot have children
@@ -232,7 +260,7 @@ export function addSubtask(parentId, title) {
 
 ==========================================================
 */
-export function deleteTask(taskId) {        // Delete task by their ID
+export function deleteTask(taskId) {        // Delete root task by their ID
     const game = getActiveGame();
     if (!game) {
         return;
@@ -286,7 +314,7 @@ export function deleteTask(taskId) {        // Delete task by their ID
 ==========================================================
 */
 function deleteFromSubtasks(task, taskId) {         // Recursively removes a task from nested subtasks
-    if (!task.subtasks) { 
+    if (!task.subtasks) {
         return false;
     }
 
@@ -468,7 +496,7 @@ function updateParents(taskId) {        // Update parent based on children
 
     parent.completed = allDone;
 
-    updateParents(parent.id); // upwards recursively
+    updateParents(parent.id);          // Keep going upwards recursively
 }
 
 
@@ -547,19 +575,19 @@ export function collapseIfEmpty(taskId) {       // Collapse empty tasks when use
 ==========================================================
 */
 export function renameGame(gameId, name) {
-  const nextName = String(name ?? "").trim();       // Normalize title format
+    const nextName = String(name ?? "").trim();       // Normalize title format
 
-  if (!nextName) {                                  // Block empty names to not save a blank label into state
-    return false;
-  }
+    if (!nextName) {                                  // Block empty names to not save a blank label into state
+        return false;
+    }
 
-  const game = appState.games.find((g) => String(g.id) === String(gameId));     // Compare ids safely
+    const game = appState.games.find((g) => String(g.id) === String(gameId));     // Compare ids safely
 
-  if (!game) {
-    return false;
-  }
+    if (!game) {
+        return false;
+    }
 
-  game.name = nextName;     // Apply change directly to app state
-  saveTasks();              // Persist changes so refresh/navigation keeps the rename
-  return true;
+    game.name = nextName;     // Apply change directly to app state
+    saveTasks();              // Persist changes so refresh/navigation keeps the rename
+    return true;
 }

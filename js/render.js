@@ -1,4 +1,4 @@
-import { arrowIcon, iconDelete, iconDrag, iconEdit, iconFullSc, iconPlus } from "./icons.js";
+import { arrowIcon, iconDelete, iconDrag, iconEdit, iconFullSc, iconPlus, iconSortAsc, iconSortDesc, iconFilter } from "./icons.js";
 import { findTaskInGame } from "./logic.js";
 import { appState } from "./state.js";
 import { formatDateTime } from "./utils/date.js";
@@ -33,6 +33,27 @@ const SIZE = {
 
 
 
+function renderSortCreatedIcon() {
+    const sortBtn = document.getElementById("sort-created-btn");
+    if (!sortBtn) {
+        return;     // Stop safely if this page doesn't have the sort button
+    }
+
+    const iconHost = sortBtn.querySelector("[data-sort-created-icon]");
+    if (!iconHost) {
+        return;     // Stop safely if the icon wrapper is missing
+    }
+    
+    const dir = appState.sortRootByCreated;         // sort by: null, "asc", "desc"
+
+    if (!dir) {
+        iconHost.innerHTML = iconFilter;            // Default icon (no sort)
+    } else {
+        iconHost.innerHTML = dir === "asc" ? iconSortAsc : iconSortDesc;
+    }
+}
+
+
 /*
 ==========================================================
 
@@ -54,6 +75,48 @@ function updateDrawerButtons() {
     discardBtn.disabled = !appState.isTaskUnsaved;
 }
 
+/*
+==========================================================
+
+------------- Persistent Subtask Input Row ---------------
+
+==========================================================
+*/
+
+// Note: This helper is currently not being used
+function renderSubtaskInputRow(parentTask, container, childLevel, mode = "full") {
+
+    if (mode !== "full") {                        // Don't show in compact drawer
+        return;
+    }
+
+    if (!parentTask?.expanded) {                 // Only when expanded
+        return;
+    }
+
+    if (!parentTask?.subtasks) {                // Only tasks that can have children get a subtask input row
+        return;
+    }
+
+    const li = document.createElement("li");
+    li.className = "flex items-center gap-3";
+    li.style.marginLeft = `${childLevel * 38}px`;
+
+    li.innerHTML = `
+    <input
+      class="input input-sm input-bordered w-full subtask-input"
+      data-parent-id="${parentTask.id}"
+      placeholder="Type new objective..."
+    />
+  `;
+
+    container.appendChild(li);
+
+    const input = li.querySelector(".subtask-input");
+    const draft = appState.subtaskDrafts?.[parentTask.id] ?? "";    // Fall back to "" so input.value is always a string
+    input.value = draft;                                            // Restores text after any render
+}
+
 
 
 /*
@@ -70,13 +133,34 @@ export function render() {
     listContainer.innerHTML = "";           // Clear existing HTML
 
     const game = appState.games.find(g => g.id === appState.activeGameId);
-    if (!game) {
+    if (!game) {                           // Stop safely if the active game is missing
         return;
     }
 
+    renderSortCreatedIcon();
+
+    const rootTasks = [...game.tasks];     // Copy list so sorting doesn't change original order
+
+    const toTime = (createdAt) => {
+
+        // createdAt is an ISO string in Task model, so parse it to milliseconds before sorting
+        // since sorting needs numbers
+        if (typeof createdAt === "number") {
+            return createdAt;
+        }
+        const parsed = Date.parse(createdAt);
+        return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    if (appState.sortRootByCreated === "desc") {
+        rootTasks.sort((a, b) => toTime(b.createdAt) - toTime(a.createdAt));    // Newest first
+    }
+    else if (appState.sortRootByCreated === "asc") {
+        rootTasks.sort((a, b) => toTime(a.createdAt) - toTime(b.createdAt));    // Oldest first
+    }
 
     // Render Standalone/Root Tasks first
-    game.tasks.forEach(task => {
+    rootTasks.forEach((task) => {
         renderTask(task, listContainer, 0);
     });
 
@@ -111,29 +195,46 @@ function createTaskRow(task, level = 0, mode = "full") {
     const size = SIZE[mode];
     const hasSubtasks = task.subtasks && task.subtasks.length > 0;
 
+    // Inline edit state:
+    // When a task is being edited, render an <input> instead of the <span>
+    const isInlineEditing = appState.inlineEditingTaskId === task.id;
+
+    const titleNode = isInlineEditing       // titleNode swaps between a read-only title <span> and an editable <input>
+        ? `
+      <input
+        class="flex-1 ${size.text} bg-transparent focus:outline-none"
+        data-inline-edit="${task.id}"
+        value="${appState.inlineEditingValue ?? task.title}"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    `
+        : `
+      <span
+        class="flex-1 ${size.text} ${task.completed ? "line-through" : ""} ${mode === "full" && level === 0 ? "cursor-pointer" : ""}"
+        data-task-label
+      >${task.title}</span>
+    `;
+
     return `
     <div class="flex items-center ${size.gap} flex-1 list-row">
-        
-        ${renderLeftControls(task, level, hasSubtasks, mode)}
-        ${mode === "full" && level === 2 ? `
-            <div class="ml-8">
-                <div class="drag-handle ${size.drag}" draggable="true">
-                ${iconDrag}
-                </div>
-            </div>` : ""}
+      ${renderLeftControls(task, level, hasSubtasks, mode)}
+      ${mode === "full" && level === 2 ? `
+        <div class="ml-8">
+          <div class="drag-handle ${size.drag}" draggable="true">
+            ${iconDrag}
+          </div>
+        </div>` : ""}
 
-        <input type="checkbox" class="task-checkbox checkbox ${size.checkbox} checkbox-primary" ${task.completed ? "checked" : ""} />
-        <span class="flex-1 ${size.text} ${task.completed ? "line-through" : ""}
-        ${mode === "full" && level === 0 ? "cursor-pointer" : ""}">${task.title}</span>
+      <input type="checkbox" class="task-checkbox checkbox ${size.checkbox} checkbox-primary" ${task.completed ? "checked" : ""} />
+      ${titleNode}
     </div>
 
     <button class="delete btn ${size.deleteBtn} btn-circle btn-ghost text-error ml-auto">
-        ${iconDelete}
+      ${iconDelete}
     </button>
-    `;
+  `;
 }
-
-
 
 
 /*
@@ -151,7 +252,7 @@ function renderTask(task, container, level = 0, mode = "full") {
     const li = createTaskElement(task, level, mode);
     container.appendChild(li);
 
-    renderInputIfActive(task, container, level);    // If this is the active task for subtask creation, render the input right below it
+    renderInputIfActive(task, container, level);    // Current active subtask input
 
     if (task.subtasks && task.expanded) {           // Recursively render children only if the task is expanded
         task.subtasks.forEach(sub =>
@@ -188,8 +289,8 @@ function createTaskElement(task, level, mode = "full") {
     const li = document.createElement("li");
     li.className = "flex items-center gap-3";
     li.dataset.id = task.id;
-    li.draggable = mode === "full";           // Only the full task list supports drag-and-drop
-    li.style.marginLeft = `${level * 38}px`; // Dynamic Indent
+    li.draggable = mode === "full";              // Only the full task list supports drag-and-drop
+    li.style.marginLeft = `${level * 38}px`;    // Dynamic Indent (by nesting level)
 
     li.innerHTML = createTaskRow(task, level, mode);
     return li;
@@ -233,6 +334,8 @@ function renderLeftControls(task, level, hasSubtasks, mode) {
 
 ==========================================================
 */
+
+// This renders the single subtask input that follows the currently active task
 function renderInputIfActive(task, container, level) {
 
     if (appState.creatingSubtaskFor !== task.id) {          // Only render the input if this is the current task
@@ -241,7 +344,7 @@ function renderInputIfActive(task, container, level) {
 
     const inputLi = document.createElement("li");
     inputLi.className = `flex items-center gap-2`;
-    inputLi.style.marginLeft = `${(level + 1) * 24}px`;     // Dynamic Indent
+    inputLi.style.marginLeft = `${(level + 1) * 24}px`;     // Indent input under the parent task
 
     inputLi.innerHTML = `
         <input class="input input-sm input-bordered w-full subtask-input"
@@ -276,7 +379,7 @@ export function renderTaskDetail() {
 
     panel.classList.remove("hidden");
 
-    const { formattedDate, formattedTime } = formatDateTime(task.createdAt);    // Format the stored creation date into a more readable format
+    const { formattedDate, formattedTime } = formatDateTime(task.createdAt);    // Format the stored creation date (task.createdAt) into a more readable format
 
     panel.innerHTML = `
         <div class="p-3 flex flex-col h-full">
@@ -359,11 +462,6 @@ export function renderTaskDetail() {
         });
     }
 
-    document.getElementById("close-panel").onclick = () => {            // Close button clears the selected task and hides the drawer
-        appState.selectedTaskId = null;
-        renderTaskDetail();
-    };
-
     updateDrawerButtons();                                              // Refresh save/discard enabled state after the drawer is rendered
 
 
@@ -428,7 +526,7 @@ export function renderGames() {
 
     appState.games.forEach(game => {
         const card = document.createElement("div");
-        card.dataset.gameId = game.id;
+        card.dataset.gameId = game.id;      // Used by homepage click handler to navigate to the game page
 
         card.className = "card w-[350px] overflow-hidden group relative mx-auto"
 
@@ -471,7 +569,7 @@ export function renderGames() {
 
 }
 
-// Gallery container code
+// Gallery container code (to be used later)
 /*
 <div class="task-gallery flex flex-col w-full justify-start bg-accent mb-4">
                     <div class="flex flex-row">

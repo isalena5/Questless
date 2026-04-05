@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
+## [0.3] Pre-Alfa - 2026-04-05 - Branch v0.x
+### Added
+- Edit subtasks
+    - Now, with double click, you can edit the subtask's title/text
+- Drag functionality UI
+    - Drag icon now lights up on hover, instead of all being the same colour all the time
+    - Visual signifier to show the user where the objective is being dropped (with CSS)
+- Sort objectives (root tasks only) by creation time
+    - Added this functionality to the button on the top bar, which was acting as a placeholder until now
+- Undo functionality
+    - Now, the user can undo (one-step undo only):
+        - Deleting single tasks (Doesn't apply to delete all)
+        - Making changes to the subtask & root task titles
+- More & better comments for my sanity and mental health (this is becoming a big ball of code)
+
+### Fixed
+- Cleaned up some duplicated and redudant code
+
+### Changed
+- Added margin to the top and bottom of the Game objectives page (Game.html)
+
 ## [0.2.1] Pre-Alfa - 2026-04-02 - Branch v0.x
 ### Added
 - Edit Game title functionality in homepage

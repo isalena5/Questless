@@ -6,23 +6,27 @@ Now, hold on. This ain't even public yet.
 
 > \[!NOTE]
 > ### Updates
->> #### Pre-Alfa [0.2.1] - 2026-04-02 - Branch v0.x
+>> #### Pre-Alfa [0.3] - 2026-04-05 - Branch v0.x
 >> ### Added
->> - Edit Game title functionality in homepage
->> - Breadcrumbs update automatically (no longer static text)
->>    - Automatically displays current Game
->>    - Links back to the homepage
+>> - Edit subtasks
+>>    - Now, with double click, you can edit the subtask's title/text
+>> - Margin to the top and bottom of the Game objectives page (Game.html)
+>> - Drag functionality UI
+>>    - Drag icon now lights up on hover, instead of all being the same colour all the time
+>>    - Visual signifier to show the user where the objective is being dropped (with CSS)
+>> - Sort objectives (root tasks only) by creation time
+>>    - Added this functionality to the button on the top bar, which was acting as a placeholder until now
+>> - Undo functionality
+>>    - Now, the user can undo (one-step undo only):
+>>        - Deleting single tasks (Doesn't apply to delete all)
+>>        - Making changes to the subtask & root task titles
 >> 
 >> ### Fixed
->> - Homepage
->>    - Edit title button now functional
->>    - On click, card leads to correct Game id
->> 
+>> - Cleaned up some duplicated and redudant code
+>>
 >> ### Changed
->> - Mouse pointers show correct pointer:
->>    - Drag button has a drag cursor pointer
->>    - Root tasks now show you can click on them through the cursor pointer
->> - Branch v0.1 renamed to v0.x
+>> - Added margin to the top and bottom of the Game objectives page (Game.html)
+>>
 
 
 ## Upcoming changes

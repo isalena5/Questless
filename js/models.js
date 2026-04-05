@@ -35,7 +35,6 @@ export class Task {
         // this.tags = []; ---> Create addToArray (categories) function. **
         // Create assignCategories function
         // this.colour; **
-        // this.description; ***
         // this.gallery; ***
         // this.guides; ***
         // this.difficulty; *

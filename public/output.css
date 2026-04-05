@@ -936,6 +936,23 @@
       }
     }
   }
+  .indicator {
+    @layer daisyui.l1.l2.l3 {
+      position: relative;
+      display: inline-flex;
+      width: max-content;
+      :where(.indicator-item) {
+        z-index: 1;
+        position: absolute;
+        white-space: nowrap;
+        top: var(--indicator-t, 0);
+        bottom: var(--indicator-b, auto);
+        left: var(--indicator-s, auto);
+        right: var(--indicator-e, 0);
+        translate: var(--indicator-x, 50%) var(--indicator-y, -50%);
+      }
+    }
+  }
   .swap {
     @layer daisyui.l1.l2.l3 {
       position: relative;
@@ -1466,6 +1483,9 @@
   .mt-7 {
     margin-top: calc(var(--spacing) * 7);
   }
+  .mt-16 {
+    margin-top: calc(var(--spacing) * 16);
+  }
   .mt-auto {
     margin-top: auto;
   }
@@ -1551,6 +1571,9 @@
   }
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
+  }
+  .mb-12 {
+    margin-bottom: calc(var(--spacing) * 12);
   }
   .mb-\[24px\] {
     margin-bottom: 24px;
@@ -2129,15 +2152,6 @@
     }
   }
 }
-.image-game:hover {
-  cursor: pointer;
-}
-#list-container .drag-handle {
-  cursor: grab;
-}
-#list-container .drag-handle:active {
-  cursor: grabbing;
-}
 .surface {
   width: 100%;
   min-height: 100vh;
@@ -2172,6 +2186,47 @@
 .content-flex {
   display: flex;
   flex-direction: column;
+}
+.image-game:hover {
+  cursor: pointer;
+}
+#list-container li.drop-before {
+  position: relative;
+}
+#list-container li.drop-before::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -2px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.9;
+}
+#list-container li.drop-after {
+  position: relative;
+}
+#list-container li.drop-after::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.9;
+}
+#list-container .drag-handle {
+  cursor: grab;
+  opacity: 0.35;
+  transition: opacity 150ms ease;
+}
+#list-container li:hover .drag-handle {
+  opacity: 1;
+}
+#list-container .drag-handle:active {
+  cursor: grabbing;
+  opacity: 1;
 }
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {
