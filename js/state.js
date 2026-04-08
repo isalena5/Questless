@@ -67,7 +67,7 @@ export let appState = {
     inlineEditingTaskId: null,  // Subtask currently being inline-edited
     inlineEditingValue: "",     // Inline edit draft value
 
-    
+
     /*
     ==========================================================
 

@@ -1,11 +1,11 @@
-import { loadTasks } from "./storage.js";
+import { loadTasks, saveTasks } from "./storage.js";
 import { render, renderGames } from "./render.js";
 import { appState } from "./state.js";
 import { Game } from "./models.js";
 import { initTaskEvents } from "./events.tasks.js";
 import { initGameEvents } from "./events.games.js";
 
-window.appState = appState;     // !!! Dev helper to inspect state in the console
+window.appState = appState;             // !!! Dev helper to inspect state in the console
 
 
 /*
@@ -16,12 +16,12 @@ window.appState = appState;     // !!! Dev helper to inspect state in the consol
 ==========================================================
 */
 function setActiveGameFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    const gameId = params.get("id");
+  const params = new URLSearchParams(window.location.search);
+  const gameId = params.get("id");
 
-    if (gameId) {
-        appState.activeGameId = gameId;     // Keep navigation state in sync with ?id=
-    }
+  if (gameId) {
+    appState.activeGameId = gameId;     // Keep navigation state in sync with ?id=
+  }
 }
 
 
@@ -72,7 +72,9 @@ function devPatchGameCovers() {
     }
   }
 
-  if (changed) localStorage.setItem("appState", JSON.stringify(appState));      // Persist patched covers once
+  if (changed) {      // Persist patched covers once
+    saveTasks();
+  };
 }
 
 
@@ -85,67 +87,67 @@ function devPatchGameCovers() {
 */
 function init() {
 
-    loadTasks();                // Load saved app state from localStorage first
-    devPatchGameCovers();       // !!! Dev-only: assign covers to existing games
-    setActiveGameFromUrl();     // Apply the game id from the URL after loading saved data
+  loadTasks();                // Load saved app state from localStorage first
+  devPatchGameCovers();       // !!! Dev-only: assign covers to existing games
+  setActiveGameFromUrl();     // Apply the game id from the URL after loading saved data
 
-    if (appState.games.length === 0) {  // If there are no saved games yet, create a default game
-
-        /*
-        // Test
-        const g1 = new Game("Game 1");
-        const g2 = new Game("Game 2");
-        const g3 = new Game("Game 3");
-
-        appState.games.push(g1, g2, g3);
-        appState.activeGameId = g1.id;
-
-        localStorage.setItem("appState", JSON.stringify(appState)); */
-
-        const defaultGame = new Game("Default Game");
-
-        appState.games.push(defaultGame);
-        appState.activeGameId = defaultGame.id;
-
-        localStorage.setItem("appState", JSON.stringify(appState));
-    }
-
-    // Detect which page UI to render:
-    // - Task page (game.html)
-    // - Home page with the game card group
-    const hasTaskUI = document.getElementById("list-container");
-    const hasGameUI = document.querySelector(".cd-cards-group");
-
+  if (appState.games.length === 0) {  // If there are no saved games yet, create a default game
 
     /*
-    * Task page setup
-    */
-    if (hasTaskUI) {    // Check whether the active game id actually exists
+    // Test
+    const g1 = new Game("Game 1");
+    const g2 = new Game("Game 2");
+    const g3 = new Game("Game 3");
 
-        const gameExists = appState.games.some(g => g.id == appState.activeGameId);
+    appState.games.push(g1, g2, g3);
+    appState.activeGameId = g1.id;
 
-        if (!gameExists) {     // Fallback to first game if the active one is invalid
-            appState.activeGameId = appState.games[0]?.id;
-        }
+    localStorage.setItem("appState", JSON.stringify(appState)); */
 
-        initBreadcrumbs();     // Update breadcrumb label with the active game name
+    const defaultGame = new Game("Default Game");
 
-        // Attach task-page event listeners
-        // and render the task UI
-        initTaskEvents();
-        render();
+    appState.games.push(defaultGame);
+    appState.activeGameId = defaultGame.id;
+
+    localStorage.setItem("appState", JSON.stringify(appState));
+  }
+
+  // Detect which page UI to render:
+  // - Task page (game.html)
+  // - Home page with the game card group
+  const hasTaskUI = document.getElementById("list-container");
+  const hasGameUI = document.querySelector(".cd-cards-group");
+
+
+  /*
+  * Task page setup
+  */
+  if (hasTaskUI) {    // Check whether the active game id actually exists
+
+    const gameExists = appState.games.some(g => g.id == appState.activeGameId);
+
+    if (!gameExists) {     // Fallback to first game if the active one is invalid
+      appState.activeGameId = appState.games[0]?.id;
     }
 
-    /*
-    * Homepage setup
-    */
-    else if (hasGameUI) {
+    initBreadcrumbs();     // Update breadcrumb label with the active game name
 
-        // Attach homepage game-card events
-        // and render game cards
-        initGameEvents();
-        renderGames();
-    }
+    // Attach task-page event listeners
+    // and render the task UI
+    initTaskEvents();
+    render();
+  }
+
+  /*
+  * Homepage setup
+  */
+  else if (hasGameUI) {
+
+    // Attach homepage game-card events
+    // and render game cards
+    initGameEvents();
+    renderGames();
+  }
 }
 
 

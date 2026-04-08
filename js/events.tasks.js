@@ -1,7 +1,22 @@
-import { addTask, addSubtask, toggleTask, deleteTask, deleteAll, findTaskInGame, findParentTask, collapseIfEmpty, reorderTasks, recordUndoSnapshot, undoLastChange } from "./logic.js";
+import {
+    addTask,
+    addSubtask,
+    toggleTask,
+    deleteTask,
+    deleteAll,
+    findTaskInGame,
+    findParentTask,
+    collapseIfEmpty,
+    reorderTasks,
+    recordUndoSnapshot,
+    undoLastChange,
+    collapseAllSubtasks
+} from "./logic.js";
+
 import { saveTasks } from "./storage.js";
-import { render } from "./render.js";
+import { render, renderSubtasksModal } from "./render.js";
 import { appState } from "./state.js";
+
 
 /*
 ==========================================================
@@ -29,12 +44,12 @@ function clearDropIndicator() {
         return;
     }
 
-    dropIndicatorLi.classList.remove("drop-before", "drop-after");  // Remove both possible indicator classes from the last highlighted row
+    dropIndicatorLi.classList.remove("drop-before", "drop-after");  // Remove indicator classes from the last highlighted row
     dropIndicatorLi = null;                                         // Forget which row was highlighted
 }
 
 function setDropIndicator(li, before) {
-    if (!li) {     // Stop safely if it didn't get a valid row
+    if (!li) {                      // Stop safely if it didn't get a valid row
         return;
     }
 
@@ -243,6 +258,8 @@ function handleListClick(e) {
     const checkbox = e.target.matches('input[type="checkbox"]');
     const drag = e.target.closest(".drag-handle");
     const swap = e.target.closest(".swap");
+    const edit = e.target.closest("[data-edit-subtask]");
+
 
     const taskId = getTaskIdFromEvent(e);   // Get the task id for the clicked row
     if (!taskId) {
@@ -255,7 +272,7 @@ function handleListClick(e) {
         return;
     }
 
-    if (drag || swap || checkbox) {        // If the user clicked a control, do not open the side drawer
+    if (drag || swap || checkbox || edit) {        // If the user clicked a control, do not open the side drawer
         return;
     }
 
@@ -345,11 +362,13 @@ export function initTaskEvents() {
     const addBtn = document.getElementById("add-btn-js");
     const resetBtn = document.getElementById("deleteAll-btn-js");
     const sortBtn = document.getElementById("sort-created-btn");
+    const collapseAllBtn = document.getElementById("collapse-all-btn");
 
     // Shared modal elements
     const modal = document.getElementById("my_modal_1");
     const confirmBtn = document.getElementById("confirm-delete-all");
     const cancelBtn = document.getElementById("cancel-delete-all");
+
 
 
     /*
@@ -513,7 +532,8 @@ export function initTaskEvents() {
 
     listContainer.addEventListener("keydown",
         function (e) {
-            if (!e.target.classList.contains("subtask-input")) {    // Only react when the user is typing in the subtask input
+            const input = e.target.closest(".subtask-input");       // Only react when the user is typing in the subtask input
+            if (!input) {
                 return;
             }
 
@@ -521,14 +541,30 @@ export function initTaskEvents() {
                 return;
             }
 
-            const title = e.target.value.trim();
-            const parentId = appState.creatingSubtaskFor;
+            e.preventDefault();
 
-            if (title) {                                            // Only add the subtask if there is actual text
-                addSubtask(parentId, title);
+            const title = input.value.trim();
+            if (!title) {                                            // Only add the subtask if there is actual text (do nothing if empty)
+                return;
             }
 
-            render();                                               // Re-render so the new subtask appears
+            const parentId = input.dataset.parentId;
+            if (!parentId) {
+                return;
+            }
+
+            addSubtask(parentId, title);                            // Add subtask to this parent
+
+            // After re-render, focus this parent's input so user can keep adding
+            requestAnimationFrame(() => {
+                const next = listContainer.querySelector(`.subtask-input[data-parent-id="${CSS.escape(parentId)}"]`);
+                if (!next) {
+                    return;
+                }
+
+                next.focus();
+                next.value = "";                           // Clear for the next subtask
+            });
         });
 
 
@@ -541,22 +577,23 @@ export function initTaskEvents() {
     */
 
     listContainer.addEventListener("focusout", function (e) {
-        if (!e.target.classList.contains("subtask-input")) {    // Only handle focus leaving the subtask input
+        const input = e.target.closest(".subtask-input");           // Check if focus left one of the subtask inputs
+        if (!input) {                                               // Stop safely if it wasn't the subtask input
             return;
         }
 
-        const title = e.target.value.trim();
-        const parentId = appState.creatingSubtaskFor;
+        const title = input.value.trim();
+        const parentId = input.dataset.parentId;                   // data-parent-id returns which task this input belongs to
 
-        if (title) {                                            // If there is text, save it as a new subtask
-            addSubtask(parentId, title);
+        if (!parentId) {                                           // Stop safely if the parent id is missing          
+            return;
         }
-        else {
+
+        if (!title) {
             collapseIfEmpty(parentId);                          // Collapse only if user abandoned input empty
-            appState.creatingSubtaskFor = null;
+            render();                                          // Re-render to update UI
         }
 
-        render();                                               // Re-render to update UI
     });
 
 
@@ -621,6 +658,23 @@ export function initTaskEvents() {
         });
     }
 
+    if (collapseAllBtn) {
+        collapseAllBtn.addEventListener("click", () => {
+            const game = appState.games.find(g => g.id === appState.activeGameId);
+            if (!game) { // Stop safely if the active game is missing
+                return;
+            }
+
+            collapseAllSubtasks(game.tasks); // Collapse standalone task tree
+
+            game.groups.forEach(group => {
+                collapseAllSubtasks(group.tasks); // Collapse each group's task tree
+            });
+
+            saveTasks();
+            render();
+        });
+    }
 
     /*
     * Click Events
@@ -639,6 +693,45 @@ export function initTaskEvents() {
             return;
         }
 
+        // Subtask edit button click
+        const editBtn = e.target.closest("[data-edit-subtask]");
+        if (editBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const taskId = editBtn.dataset.editSubtask;
+            if (!taskId) {
+                return;
+            }
+
+            // Subtasks only (no root tasks)
+            const parent = findParentTask(taskId);
+            if (!parent) {
+                return;
+            }
+
+            startInlineSubtaskEdit(taskId);
+            return;
+        }
+
+        // Open subtasks modal (maximize button in drawer)
+        if (e.target.closest("#open-subtasks-modal")) {
+            const modal = document.getElementById("subtasks_modal");
+            if (!modal) {
+                return;
+            }
+
+            renderSubtasksModal(); // Fill modal with current selected task’s subtasks
+            modal.showModal();
+            return;
+        }
+
+        // Close subtasks modal (X button)
+        if (e.target.closest("#close-subtasks-modal")) {
+            const modal = document.getElementById("subtasks_modal");
+            modal?.close();
+            return;
+        }
 
         if (e.target.closest("#list-container, #subtasks-container")) {             // Handle clicks inside the main list or the compact drawer list
             handleListClick(e);
@@ -761,33 +854,6 @@ export function initTaskEvents() {
    ==========================================================
    */
 
-    document.addEventListener("dblclick", (e) => {
-
-        if (!e.target.closest("#list-container, #subtasks-container")) {        // Only allow inline edit inside main list or drawer subtasks list
-            return;
-        }
-
-        // Only start edit when double-clicking a subtask title
-        const label = e.target.closest("[data-task-label]");
-        if (!label) {
-            return;
-        }
-
-        const li = label.closest("li");
-        const taskId = li?.dataset?.id;     // dataset reads "data-id" attributes (chaining avoids crashes)
-        if (!taskId) {
-            return;
-        }
-
-        // Subtasks only (no root tasks)
-        const parent = findParentTask(taskId);
-        if (!parent) {
-            return;
-        }
-
-        startInlineSubtaskEdit(taskId);     // Swap the title span into an input and focusses it
-    });
-
     document.addEventListener("input", (e) => {
         const input = e.target.closest("[data-inline-edit]");   // Only react to the subtask inline edit input
         if (!input) return;
@@ -839,41 +905,12 @@ export function initTaskEvents() {
         e.preventDefault();                 // Stops the browser from undoing text inside an input instead
 
         const ok = undoLastChange();        // Restore the last snapshot
-        
+
         // Re-render so the UI matches the restored state
         if (ok) {
             render();
         }
     });
-
-    /*
-    * Input Events
-    */
-
-    /* document.addEventListener("input", (e) => {
-
-        // Live title editing inside the drawer
-        const titleInput = e.target.closest("[data-edit-task]");
-        if (titleInput) {
-            appState.editingValue = titleInput.value;
-            updateDirtyState();
-
-            // Re-render the drawer so button enabled/disabled state updates
-            renderTaskDetail();
-            return;
-        }
-
-
-        // Live description editing inside the drawer
-        const descInput = e.target.closest("[data-edit-description]");
-        if (descInput) {
-            appState.editingDescription = descInput.value;
-            updateDirtyState();
-
-            // Re-render the drawer so button enabled/disabled state updates
-            renderTaskDetail();
-        }
-    }); */
 
 
     // Initial Page load

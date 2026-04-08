@@ -12,18 +12,18 @@
     <div class="content-flex gap-12 mb-12">
         <div class="breadcrumbs text-sm mt-16">
             <ul>
-                <li><a href="homepage.html">Home</a></li>
+                <li><a href="index.html">Home (Shelf)</a></li>
                 <li id="breadcrumb-game-name">Game</li>
             </ul>
         </div>
         <div class="content-flex gap-4">
             <div class="flex w-[874px] gap-4">
-                <label class="input w-full">
-                    <input type="text" id="input-box" class="grow w-full" placeholder="Write a new objective" />
-                    <kbd class="kbd kbd-sm bg-neutral-content text-neutral border-neutral/30">⏎</kbd>
+                <label class="input input-lg w-full">
+                    <input type="text" id="input-box" class="grow w-full" placeholder="Type your new project..." />
+                    <kbd class="kbd kbd-md bg-base-100 text-lg">⏎</kbd>
                 </label>
 
-                <button id="add-btn-js" class="btn btn-primary rounded-xl">
+                <button id="add-btn-js" class="btn btn-primary btn-lg rounded-xl">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                         <path
                             d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
@@ -36,7 +36,8 @@
                     <!-- Filter top bar -->
                     <div class="sorting-bar px-6 py-5">
                         <div class="flex grid-cols-2 items-center justify-center gap-2">
-                            <button type="button" id="sort-created-btn" class="btn btn-ghost btn-md text-accent-content hover:bg-neutral/5">
+                            <button type="button" id="sort-created-btn"
+                                class="btn btn-ghost btn-md text-accent-content hover:bg-neutral/5">
                                 <span data-sort-created-icon aria-hidden="true">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                         class="size-4">
@@ -48,13 +49,17 @@
                                 Creation date
                             </button>
 
+                            <button type="button" id="collapse-all-btn" class="btn btn-neutral btn-md is-hidden">
+                                Collapse all
+                            </button>
+
                             <form class="filter btn-accent">
-                                <input class="btn btn-sm rounded-full text-accent-content" type="radio" name="frameworks"
-                                    aria-label="Filter 1" />
-                                <input class="btn btn-sm rounded-full text-accent-content" type="radio" name="frameworks"
-                                    aria-label="Filter 2" />
-                                <input class="btn btn-sm rounded-full text-accent-content" type="radio" name="frameworks"
-                                    aria-label="Filter 3" />
+                                <input class="btn btn-sm rounded-full text-accent-content" type="radio"
+                                    name="frameworks" aria-label="Filter 1" />
+                                <input class="btn btn-sm rounded-full text-accent-content" type="radio"
+                                    name="frameworks" aria-label="Filter 2" />
+                                <input class="btn btn-sm rounded-full text-accent-content" type="radio"
+                                    name="frameworks" aria-label="Filter 3" />
                                 <input class="btn btn-sm rounded-full text-accent-content" type="reset" value="x" />
                             </form>
 
@@ -94,7 +99,7 @@
     </dialog>
 
     <!-- Side-drawer for Tasks -->
-    <div id="task-detail-panel" class="fixed right-0 top-0 h-full w-160 bg-base-200 shadow-lg hidden px-[60px]">
+    <div id="task-detail-panel" class="fixed right-0 top-0 h-full w-160 bg-base-200 shadow-lg hidden">
         <div></div>
     </div>
 </body>

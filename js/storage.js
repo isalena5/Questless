@@ -11,7 +11,7 @@ export function loadTasks() {   // Load appState from localStorage on page start
     const saved = localStorage.getItem("appState");
 
     if (!saved) {                       // Stop safely if there's nothing saved yet
-        return; 
+        return;
     }
 
     const parsed = JSON.parse(saved);   // Convert stored JSON string back into an object

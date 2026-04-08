@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
+## [0.4] Alfa - 2026-04-08 - Branch v0.x
+### Added
+- Collapse all button that shows when something is collapsable
+- Maximized version of the subtask table inside the task drawer when pressing the maximize button
+- Edit button to edit subtasks besides the subtask title
+- More & better code, to continue to have my sanity
+- Added a MIT License to this project
+
+### Fixed
+- Input box for subtasks is now always visible and on the top of the list
+    - UI of the input box has also been changed to better match the Figma design
+- UI change in task drawer: Better alignment of the 'X' button
+    - The 'X' button is also slightly bigger
+
+### Changed
+- Root task input box:
+    - Placeholder text and Add button made bigger for better readability and accessibility
+    - Colour of KBD component (in root task input) changed for better accessibility
+- Text in different placeholder and accessibility labels
+- Subtask title now is edited via clicking the edit button besides it, instead of double clicking the subtask's title
+
+### Deprecated
+- Previous index.html deleted. Homepage.html took its place as the new index.html.
+
 ## [0.3] Pre-Alfa - 2026-04-05 - Branch v0.x
 ### Added
 - Edit subtasks

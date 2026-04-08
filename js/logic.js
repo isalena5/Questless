@@ -118,7 +118,7 @@ export function reorderTasks(draggedId, targetId) {     // Moves dragged task be
         return;
     }
 
-    const game = appState.games.find(g => g.id === appState.activeGameId);
+    const game = getActiveGame();
     if (!game) {
         return;
     }
