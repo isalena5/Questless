@@ -61,7 +61,7 @@ The 1.0 release is going to be the first official release of this program. At th
 ## ❗ Latest Updates
 
 > \[!NOTE]
-> #### Alfa [0.4] - 2026-04-08 - Branch v0.x
+> #### Alfa [0.4] - 2026-04-08 -- Pushed to main
 > ### Added
 > - Collapse all button that shows when something is collapsable
 > - Maximized version of the subtask table inside the task drawer when pressing the maximize button
@@ -86,7 +86,7 @@ The 1.0 release is going to be the first official release of this program. At th
 > - Previous index.html deleted. Homepage.html took its place as the new index.html.
 
 ## 0️⃣ Version
-The current latest version is Alpha 0.4. You can access it through the ![v0.x branch](https://github.com/isalena5/Questless/tree/v0.x).
+The current latest version is Alpha 0.4. You can access it through the main and ![v0.x branch](https://github.com/isalena5/Questless/tree/v0.x).
 
 ## 🗒️ Upcoming changes
 - Adding grouping
