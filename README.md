@@ -1,15 +1,14 @@
-<p align="center">
+<div style="float: center; margin: auto;">
     <div>
         <img src="Logotype_Banner.png" alt="Questless" width="100%">
         <h2>To-do list program for neuro-divergent gamers to lessen their cognitive-load while playing sandbox games!</h2>
     </div>
     <a href="https://github.com/isalena5/Questless/tree/v0.x"><img alt="Static Badge Version" src="https://img.shields.io/badge/version-v0.4-orange?style=flat&logo=github&logoSize=auto"></a>
     <a href="#-license"><img alt="Static Badge" src="https://img.shields.io/badge/License-MIT-yellow?style=flat&logoSize=auto"></a>
-</p>
+</div>
 
 <details>
     <summary><b>Table of Contents</b></summary>
-
     * [Project Overview](#-project-overview)
         * [Mission](#-mission)
         * [Why Questless?](#why-questless?)
