@@ -1,27 +1,26 @@
-<div style="display: block; margin: 0 auto;">
-    <div>
-        <img src="Logotype_Banner.png" alt="Questless" width="100%">
-        <h3>To-do list program for neuro-divergent gamers to lessen their cognitive-load while playing sandbox games!</h3>
-    </div>
-    <a href="https://github.com/isalena5/Questless/tree/v0.x"><img alt="Static Badge Version" src="https://img.shields.io/badge/version-v0.4-orange?style=flat&logo=github&logoSize=auto"></a>
-    <a href="#-license"><img alt="Static Badge" src="https://img.shields.io/badge/License-MIT-yellow?style=flat&logoSize=auto"></a>
+<div>
+    <img src="Logotype_Banner.png" alt="Questless" width="100%">
+    <h3>To-do list program for neuro-divergent gamers to lessen their cognitive-load while playing sandbox games!</h3>
 </div>
+<a href="https://github.com/isalena5/Questless/tree/v0.x"><img alt="Static Badge Version" src="https://img.shields.io/badge/version-v0.4-orange?style=flat&logo=github&logoSize=auto"></a>
+<a href="#-license"><img alt="Static Badge" src="https://img.shields.io/badge/License-MIT-yellow?style=flat&logoSize=auto"></a>
+
 
 <details>
     <summary><b>Table of Contents</b></summary>
-    - ![Project Overview](#-project-overview)
-        - ![Mission](#-mission)
-        - ![Why Questless?](#why-questless?)
-    - ![Features](#-features)
-    - ![Get started](#-get-started)
-        - ![Installation](#-installation)
-        - ![Prototype](#-prototype)
-        - ![Official Release](#official-release)
-    - ![Latest Updates](#-latest-updates)
-    - ![Version](#-version)
-    - ![Upcoming Changes](#-upcoming-changes)
-    - ![Special Thanks](#-special-thanks)
-    - ![License](#-license)
+    - [Project Overview](#-project-overview)
+        - [Mission](#-mission)
+        - [Why Questless?](#why-questless?)
+    - [Features](#-features)
+    - [Get started](#-get-started)
+        - [Installation](#-installation)
+        - [Prototype](#-prototype)
+        - [Official Release](#official-release)
+    - [Latest Updates](#-latest-updates)
+    - [Version](#-version)
+    - [Upcoming Changes](#-upcoming-changes)
+    - [Special Thanks](#-special-thanks)
+    - [License](#-license)
 </details>
 
 ## 🧐 Project Overview
