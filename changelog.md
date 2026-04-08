@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
-## [0.4] Alfa - 2026-04-08 - Branch v0.x
+## [0.4] Alfa - 2026-04-08 - Branch v0.x -- Pushed to main
 ### Added
 - Collapse all button that shows when something is collapsable
 - Maximized version of the subtask table inside the task drawer when pressing the maximize button
