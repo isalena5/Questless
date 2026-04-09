@@ -52,10 +52,10 @@ function initBreadcrumbs() {
 */
 function devPatchGameCovers() {
   const byName = {
-    "Default Game": "../covers/default.png",
-    "Cities: Skylines I": "../covers/CitiesSkylines.png",
-    "Hotel Architect": "../covers/Hotel_Architect.png",
-    "Tomodachi Life 2": "../covers/TomodachiLife2.png",
+    "Default Game": "./covers/default.png",
+    "Cities: Skylines I": "./covers/CitiesSkylines.png",
+    "Hotel Architect": "./covers/Hotel_Architect.png",
+    "Tomodachi Life 2": "./covers/TomodachiLife2.png",
   };
 
   let changed = false;
