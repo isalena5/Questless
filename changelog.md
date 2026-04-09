@@ -4,9 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
+## [p2] Presentation Alpha Prototype - 2026-04-09 - Branch Presentation
+### Added
+- Functionality to load a pre-made seed on first launch of the prototype
+- Seed JSON file to act as user's starting point in the prototype
+
+### Changed
+- Changed code to support new seed implementation
+- All buttons and functionalities that were not finished or were used as placeholders were commented out or disabled
+
+
 ## [0.4.1] Alpha - 2026-04-08 - Branch v0.x -- Pushed to main
 ### Added
-- Aria labels to the HTML, where it was missing (accessibility).
+- Aria labels to the HTML, where it was missing (accessibility)
 
 ### Fixed
 - Spelling mistakes in readme & changelog
@@ -59,7 +69,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [p1] Presentation Prototype - 2026-04-02 - Branch Presentation
 ### Originally presented on March 30th, 2026
-
 ### Added
 - New branch to store the prototypes used in presentations
 - Dev function to temporarily add custom images

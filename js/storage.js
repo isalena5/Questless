@@ -7,19 +7,36 @@ export function saveTasks() {   // Save appState into localStorage so it persist
     localStorage.setItem("appState", JSON.stringify(persistable));      // Save only the persistable state
 }
 
-export function loadTasks() {   // Load appState from localStorage on page start
+export async function loadTasks() {   // Load appState from localStorage on page start
     const saved = localStorage.getItem("appState");
 
-    if (!saved) {                       // Stop safely if there's nothing saved yet
+    if (saved) {
+        const parsed = JSON.parse(saved);   // Convert stored JSON string back into an object
+
+        // Restore the parts of state that actually persist
+        appState.games = parsed.games || [];
+        appState.activeGameId = parsed.activeGameId || null;
+
+        // Undo is not restored (No undo history in new session)
+        appState.undoSnapshot = null;
         return;
     }
 
-    const parsed = JSON.parse(saved);   // Convert stored JSON string back into an object
+    try {   // Run seed from file path (if it exists)
+        const res = await fetch("./seed/appState.seed.json", { cache: "no-store" });
+        if (!res.ok) {
+            return;     // Stop safely if seed file isn't present
+        }
 
-    // Restore the parts of state that actually persist
-    appState.games = parsed.games || [];
-    appState.activeGameId = parsed.activeGameId || null;
+        const seed = await res.json();
 
-    // Undo is not restored (No undo history in new session)
-    appState.undoSnapshot = null;
+        appState.games = seed.games || [];
+        appState.activeGameId = seed.activeGameId || null;
+        appState.undoSnapshot = null;
+
+        localStorage.setItem("appState", JSON.stringify(seed));     // Store seed so it becomes the user's starting point
+    } catch {
+        // Stop safely if fetch fails
+    }
+
 }

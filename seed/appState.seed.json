@@ -1,0 +1,589 @@
+{
+    "games": [
+        {
+            "id": "43d4905d-b5d8-4db0-890d-89f1d8ce7314",
+            "name": "Cities: Skylines I",
+            "groups": [],
+            "tasks": [
+                {
+                    "id": "ebc5b99b-43d6-4472-b89c-1427f5e06ef9",
+                    "title": "Main Island",
+                    "completed": false,
+                    "tags": [],
+                    "images": [],
+                    "description": "",
+                    "createdAt": "2026-04-09T04:09:03.508Z",
+                    "expanded": false,
+                    "level": 0,
+                    "subtasks": [
+                        {
+                            "id": "5066848b-994c-4494-bebf-683bb2f89261",
+                            "title": "Touristic Area",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:10:00.451Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "7b0fa81f-cb40-41f5-8520-c53bd65ddf52",
+                            "title": "Old City (Historic Buildings)",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:10:18.835Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        }
+                    ]
+                },
+                {
+                    "id": "b006d97d-427c-44b1-a582-dee2baeeca5c",
+                    "title": "Industry Area",
+                    "completed": false,
+                    "tags": [],
+                    "images": [],
+                    "description": "",
+                    "createdAt": "2026-04-09T04:09:07.931Z",
+                    "expanded": false,
+                    "level": 0,
+                    "subtasks": [
+                        {
+                            "id": "2f542556-ad62-47cd-bb6e-825ef515165f",
+                            "title": "Forestry",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:10:36.624Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "834f3f3e-020e-437d-9153-aaf2a4a745f0",
+                            "title": "Crops",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:10:42.836Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        }
+                    ]
+                }
+            ],
+            "coverUrl": "../covers/CitiesSkylines.png"
+        },
+        {
+            "id": "152ce1b0-1c5d-4123-abfe-8288bca441c3",
+            "name": "Hotel Architect",
+            "groups": [],
+            "tasks": [
+                {
+                    "id": "fe4fbaef-e056-4a45-9b38-ca133674631a",
+                    "title": "Road to 2 stars",
+                    "completed": false,
+                    "tags": [],
+                    "images": [],
+                    "description": "",
+                    "createdAt": "2026-04-09T04:11:09.344Z",
+                    "expanded": false,
+                    "level": 0,
+                    "subtasks": [
+                        {
+                            "id": "1bb11ffd-dace-4075-9683-6dfb8a3b680e",
+                            "title": "Training staff",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:16:14.703Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": [
+                                {
+                                    "id": "0fed4ed1-40d2-4a43-a6c1-7b12fb4a1573",
+                                    "title": "Call the builders to build Training desk",
+                                    "completed": false,
+                                    "tags": [],
+                                    "images": [],
+                                    "description": "",
+                                    "createdAt": "2026-04-09T04:16:35.750Z",
+                                    "expanded": false,
+                                    "level": 2,
+                                    "subtasks": null
+                                },
+                                {
+                                    "id": "ae9590a0-e527-478e-a81f-95fe861e3c24",
+                                    "title": "Train Izzy - Reception Desk",
+                                    "completed": false,
+                                    "tags": [],
+                                    "images": [],
+                                    "description": "",
+                                    "createdAt": "2026-04-09T04:16:19.055Z",
+                                    "expanded": false,
+                                    "level": 2,
+                                    "subtasks": null
+                                }
+                            ]
+                        },
+                        {
+                            "id": "270b9f75-beea-43ea-b0a0-f4db811ebb4f",
+                            "title": "Add decorations",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:16:55.356Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": [
+                                {
+                                    "id": "870336f7-a2b3-47b3-af5e-39ce3fd5f344",
+                                    "title": "Outside",
+                                    "completed": false,
+                                    "tags": [],
+                                    "images": [],
+                                    "description": "",
+                                    "createdAt": "2026-04-09T04:17:00.518Z",
+                                    "expanded": false,
+                                    "level": 2,
+                                    "subtasks": null
+                                },
+                                {
+                                    "id": "5f7b7ecd-480f-4f59-a1ee-f0a823dcd155",
+                                    "title": "Long hallway",
+                                    "completed": false,
+                                    "tags": [],
+                                    "images": [],
+                                    "description": "",
+                                    "createdAt": "2026-04-09T04:17:08.018Z",
+                                    "expanded": false,
+                                    "level": 2,
+                                    "subtasks": null
+                                }
+                            ]
+                        },
+                        {
+                            "id": "7151fc65-b156-42c8-b0ac-47983fdca838",
+                            "title": "Upgrade both rooms",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:17:50.288Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "12ef7967-4b78-40bd-a9de-afc121424432",
+                            "title": "Hire a better chef",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:18:20.407Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        }
+                    ]
+                },
+                {
+                    "id": "484e4d5d-6f16-4969-86fc-ba8ffe97d5bf",
+                    "title": "Build second floor",
+                    "completed": false,
+                    "tags": [],
+                    "images": [],
+                    "description": "",
+                    "createdAt": "2026-04-09T04:20:33.220Z",
+                    "expanded": false,
+                    "level": 0,
+                    "subtasks": [
+                        {
+                            "id": "51d13901-afab-4f2c-8c53-4adc87b3314c",
+                            "title": "2 Athlete rooms w/private bathrooms",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:20:43.542Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": [
+                                {
+                                    "id": "2d43bc64-0962-4290-98a6-f30b9e7f75ff",
+                                    "title": "Premium items",
+                                    "completed": false,
+                                    "tags": [],
+                                    "images": [],
+                                    "description": "",
+                                    "createdAt": "2026-04-09T04:23:06.084Z",
+                                    "expanded": false,
+                                    "level": 2,
+                                    "subtasks": null
+                                },
+                                {
+                                    "id": "c4b2f999-c929-4d80-b9df-664b3a8bc15c",
+                                    "title": "Add special ammenities",
+                                    "completed": false,
+                                    "tags": [],
+                                    "images": [],
+                                    "description": "",
+                                    "createdAt": "2026-04-09T04:23:22.228Z",
+                                    "expanded": false,
+                                    "level": 2,
+                                    "subtasks": null
+                                }
+                            ]
+                        },
+                        {
+                            "id": "ff43effb-9f6a-4bbd-b9b5-f53117f13f29",
+                            "title": "Build Gym",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-04-09T04:20:49.504Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        }
+                    ]
+                }
+            ],
+            "coverUrl": "../covers/Hotel_Architect.png"
+        },
+        {
+            "id": "e537880a-cdf5-410a-aeb3-deac21078c05",
+            "name": "Tomodachi Life 2",
+            "groups": [],
+            "tasks": [
+                {
+                    "id": "491c8e7c-b1f8-4fdd-acf2-0d8754047623",
+                    "title": "Miis to create",
+                    "completed": false,
+                    "tags": [],
+                    "images": [],
+                    "description": "These are the first few miis imma create",
+                    "createdAt": "2026-03-30T06:27:43.080Z",
+                    "expanded": false,
+                    "level": 0,
+                    "subtasks": [
+                        {
+                            "id": "18f5e912-aa52-4b3d-80c4-dad3f597c034",
+                            "title": "Hugh Morris",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:50:04.523Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "940f425f-d19f-4ba2-b099-f517351ed29a",
+                            "title": "Dr. Winters",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:50:11.283Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "9f51f41f-169c-4e96-9820-63665d1ce0ae",
+                            "title": "Waldo",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:50:20.777Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "13874653-81d9-40e5-9be6-b84489d762f6",
+                            "title": "Leon (Resident Evil)",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:50:35.752Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "b6fe59ba-3f9e-41fb-88af-011ecda9502b",
+                            "title": "Mike Wasauski",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:50:43.186Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "a4ee5815-a2db-4913-b364-973e9a73eb94",
+                            "title": "Sullivan",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:50:48.043Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "06489ac4-66e9-42ff-85b2-2d1e63170ff7",
+                            "title": "Bluey",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:51:01.592Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "5d2855be-574b-46d4-9df7-6070e8fbf255",
+                            "title": "Chucky",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:51:06.107Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "d6794e95-6046-4759-8991-8ef31d03f910",
+                            "title": "Annabel",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:51:10.444Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "2ebe142b-3b62-47f0-bd63-22d94851fe0a",
+                            "title": "Gudetama",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:51:13.857Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "ef599389-d1d3-4e81-a94f-93f97b20a465",
+                            "title": "Jennifer Coolidge",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:51:39.880Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "9fadfdfd-fec2-4613-be84-a67c35f365d7",
+                            "title": "Steve Harvey",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:51:49.530Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "09d13ee8-29bb-4dcb-9068-04fca8c3d084",
+                            "title": "He-man",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:51:55.632Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "6781765a-d942-44dc-bef6-b62d58e12b35",
+                            "title": "Good bunny",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:52:06.277Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "3b55cfc5-c9da-4d00-9ef0-3dd115f69d33",
+                            "title": "Sabrina Carpenter",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:52:13.270Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "2f1c0f2b-cafb-4dcc-bc81-f5dcc51c1691",
+                            "title": "Stonks dude",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:52:27.985Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "8001f7c3-cf43-4fd9-98b2-128bd6134763",
+                            "title": "Snape",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:52:31.745Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "685c0bdc-f31c-43a6-8081-b3a0517b5525",
+                            "title": "Toad",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:52:34.199Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "918f6207-6241-45f1-b4c7-ab592dfae302",
+                            "title": "Chapell Roan",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:52:40.389Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "8b780c93-c6f7-4a54-a6c5-7800195ca0b0",
+                            "title": "Cynthia Erivo",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:52:47.222Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "b482f19d-9992-4130-ad10-c69d4eacb8f8",
+                            "title": "Dr. Seus",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:52:57.906Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "82c73194-ef3f-4797-880c-7e19e6ee3ed9",
+                            "title": "Rupaul",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:53:01.216Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "0ecb35e6-8dc5-4fac-a0ad-6f917de661ad",
+                            "title": "Edna Mode",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:53:04.706Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "8cea9d3c-c1db-49fb-b4ce-f903edb81379",
+                            "title": "Mrs. Incredible",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:53:18.417Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        },
+                        {
+                            "id": "d2be5b33-9086-4edb-abe8-297712141125",
+                            "title": "Kermit",
+                            "completed": false,
+                            "tags": [],
+                            "images": [],
+                            "description": "",
+                            "createdAt": "2026-03-30T06:53:21.363Z",
+                            "expanded": false,
+                            "level": 1,
+                            "subtasks": []
+                        }
+                    ]
+                }
+            ],
+            "coverUrl": "../covers/TomodachiLife2.png"
+        }
+    ],
+    "activeGameId": "152ce1b0-1c5d-4123-abfe-8288bca441c3"
+}

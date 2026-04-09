@@ -53,8 +53,8 @@ function initBreadcrumbs() {
 function devPatchGameCovers() {
   const byName = {
     "Default Game": "../covers/default.png",
-    "Planning Questless": "../covers/PlanningQuestless.png",
     "Cities: Skylines I": "../covers/CitiesSkylines.png",
+    "Hotel Architect": "../covers/Hotel_Architect.png",
     "Tomodachi Life 2": "../covers/TomodachiLife2.png",
   };
 
@@ -85,11 +85,11 @@ function devPatchGameCovers() {
 
 ==========================================================
 */
-function init() {
+async function init() {
 
-  loadTasks();                // Load saved app state from localStorage first
+  await loadTasks();           // Load saved app state from localStorage first (if none, load seed)
   devPatchGameCovers();       // !!! Dev-only: assign covers to existing games
-  setActiveGameFromUrl();     // Apply the game id from the URL after loading saved data
+  setActiveGameFromUrl();    // Apply the game id from the URL after loading saved data
 
   if (appState.games.length === 0) {  // If there are no saved games yet, create a default game
 
