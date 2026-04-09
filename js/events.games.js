@@ -53,7 +53,7 @@ function commitEdit() {             // Save the current input value into state a
     renderGames();   // Rebuild cards with the updated name
 }
 
-function startInlineEdit(card) {     // Swap the title <p> into an <input> and add Enter/Esc behavior
+function startInlineEdit(card) {     // Swap the title <p> into an <input> and add Enter/Esc behaviour
     const gameId = card.dataset.gameId;
     if (!gameId) {
         return;
@@ -97,8 +97,8 @@ function startInlineEdit(card) {     // Swap the title <p> into an <input> and a
         }
     });
 
-    // Clicking away would still keep the changes
-    input.addEventListener("blur", () => commitEdit());
+    // Clicking away would cancel the changes
+    input.addEventListener("blur", () => cancelEdit());
 
     input.focus();
     input.select();

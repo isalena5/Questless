@@ -1,7 +1,22 @@
-import { addTask, addSubtask, toggleTask, deleteTask, deleteAll, findTaskInGame, findParentTask, collapseIfEmpty, reorderTasks } from "./logic.js";
+import {
+    addTask,
+    addSubtask,
+    toggleTask,
+    deleteTask,
+    deleteAll,
+    findTaskInGame,
+    findParentTask,
+    collapseIfEmpty,
+    reorderTasks,
+    recordUndoSnapshot,
+    undoLastChange,
+    collapseAllSubtasks
+} from "./logic.js";
+
 import { saveTasks } from "./storage.js";
-import { render } from "./render.js";
+import { render, renderSubtasksModal } from "./render.js";
 import { appState } from "./state.js";
+
 
 /*
 ==========================================================
@@ -12,10 +27,151 @@ import { appState } from "./state.js";
 */
 
 let draggedTaskId = null;            // Tracks which task is currently being dragged
-let pendingConfirmAction = null;    // Tracks the function that should run when the user confirms a modal action
+let pendingConfirmAction = null;     // Tracks the function that should run when the user confirms a modal action
+let dropIndicatorLi = null;          // Tracks which <li> currently shows the drop indicator line
 
 
 
+/*
+==========================================================
+
+-------------- Drag Drop Indicator Helpers ---------------
+
+==========================================================
+*/
+function clearDropIndicator() {
+    if (!dropIndicatorLi) {         // Nothing highlighted right now, so nothing to clear
+        return;
+    }
+
+    dropIndicatorLi.classList.remove("drop-before", "drop-after");  // Remove indicator classes from the last highlighted row
+    dropIndicatorLi = null;                                         // Forget which row was highlighted
+}
+
+function setDropIndicator(li, before) {
+    if (!li) {                      // Stop safely if it didn't get a valid row
+        return;
+    }
+
+    // If moving from one row to another, remove the old highlight first
+    if (dropIndicatorLi && dropIndicatorLi !== li) {
+        dropIndicatorLi.classList.remove("drop-before", "drop-after");
+    }
+
+    dropIndicatorLi = li;           // Track which row is highlighted
+
+
+    // Add the correct class depending on whether it's in the top or bottom half
+    // before = true, then line ABOVE the row
+    // before = false, then line BELOW the row
+    li.classList.toggle("drop-before", before);
+    li.classList.toggle("drop-after", !before);
+}
+
+
+
+/*
+==========================================================
+
+------------- Inline Edit: Subtask Title -----------------
+
+==========================================================
+*/
+
+// Enter edit mode for a subtask's title (subtasks only, no root tasks)
+function startInlineSubtaskEdit(taskId) {
+    const task = findTaskInGame(taskId);
+    if (!task) {
+        return;
+    }
+
+    // Store edit state in appState so render() can swap <span> for <input>
+    appState.inlineEditingTaskId = taskId;
+    appState.inlineEditingValue = task.title;
+
+    render();      // Re-render list so the inline input appears
+
+    requestAnimationFrame(() => {
+        const input = document.querySelector(`[data-inline-edit="${CSS.escape(taskId)}"]`);
+        input?.focus();
+        input?.select();
+    });
+}
+
+
+// Exit edit mode without saving changes
+function cancelInlineSubtaskEdit() {
+    appState.inlineEditingTaskId = null;
+    appState.inlineEditingValue = "";
+    render();
+}
+
+// Save title edit into the task object and persist it
+function commitInlineSubtaskEdit(taskId, nextValue) {
+    const task = findTaskInGame(taskId);
+    if (!task) {
+        cancelInlineSubtaskEdit();
+        return;
+    }
+
+    const nextTitle = String(nextValue ?? "").trim();   // Convert to string & remove extra spaces
+    if (!nextTitle) {
+        cancelInlineSubtaskEdit();      // Don’t allow blank titles
+        return;
+    }
+
+    recordUndoSnapshot();               // Undo applies to subtask rename
+
+    task.title = nextTitle;             // Apply change to state
+
+
+    // Clear edit state so render() swaps input back to normal text
+    appState.inlineEditingTaskId = null;
+    appState.inlineEditingValue = "";
+
+    saveTasks();    // Persist to localStorage
+    render();       // Refresh UI
+}
+
+
+
+/*
+==========================================================
+
+---------- Discard Drawer Edits (Save Guard) -------------
+
+==========================================================
+*/
+
+// Restore edit buffers back to the last saved/original values
+function discardDrawerEdits() {
+    const task = findTaskInGame(appState.selectedTaskId);
+
+    appState.editingTaskId = null;
+    appState.editingValue = appState.originalTitle ?? "";
+    appState.editingDescription = appState.originalDescription ?? task?.description ?? "";
+    appState.isTaskUnsaved = false;
+}
+
+// Gate any drawer navigation/close behind the discard modal when dirty
+function confirmDiscardIfDirty({ onProceed }) {
+    if (!appState.isTaskUnsaved) {
+        onProceed();
+        return;
+    }
+
+    openConfirmModal({
+        title: "WARNING: Discard changes?",
+        message: "Your unsaved changes will be lost.",
+        confirmText: "Discard",
+        confirmClass: "btn-error",
+        onConfirm: () => {
+            discardDrawerEdits();
+            onProceed();
+            render();
+        },
+    });
+}
 
 /*
 ==========================================================
@@ -91,7 +247,7 @@ function handleAddTask(inputBox) {          // Shared handler (btns & 'enter' ke
 /*
 ==========================================================
 
------------- Handles Task Row Click Behavior -------------
+------------ Handles Task Row Click Behaviour -------------
 
 ==========================================================
 */
@@ -102,6 +258,8 @@ function handleListClick(e) {
     const checkbox = e.target.matches('input[type="checkbox"]');
     const drag = e.target.closest(".drag-handle");
     const swap = e.target.closest(".swap");
+    const edit = e.target.closest("[data-edit-subtask]");
+
 
     const taskId = getTaskIdFromEvent(e);   // Get the task id for the clicked row
     if (!taskId) {
@@ -109,11 +267,12 @@ function handleListClick(e) {
     }
 
     if (deleteButton) {                     // If delete button was clicked, delete the task and return
+        recordUndoSnapshot();              // Undo applies to single deletes
         deleteTask(taskId);
         return;
     }
 
-    if (drag || swap || checkbox) {        // If the user clicked a control, do not open the side drawer
+    if (drag || swap || checkbox || edit) {        // If the user clicked a control, do not open the side drawer
         return;
     }
 
@@ -122,26 +281,39 @@ function handleListClick(e) {
         return;
     }
 
-    appState.selectedTaskId = taskId;           // Store the currently selected task for the drawer
+    const isSwitchingTasks =
+        appState.selectedTaskId && String(appState.selectedTaskId) !== String(taskId);
+
+    const openTaskInDrawer = () => {
+        appState.selectedTaskId = taskId;           // Store the currently selected task for the drawer
 
 
-    const task = findTaskInGame(taskId);        // Load the full task so the drawer can be filled with its current data
-    if (!task) {
+        const task = findTaskInGame(taskId);        // Load the full task so the drawer can be filled with its current data
+        if (!task) {
+            return;
+        }
+
+        // Reset drawer editing state whenever a new task is opened
+        appState.editingTaskId = null;
+        appState.editingValue = task.title;
+        appState.editingDescription = task.description || "";
+
+        // Keep copies of the original values so "discard changes" can restore them
+        appState.originalTitle = task.title;
+        appState.originalDescription = task.description || "";
+
+        appState.isTaskUnsaved = false;     // Opening a task should not immediately count as having unsaved changes
+
+        render();                           // Re-render so the drawer appears with the selected task data
+    };
+
+    if (isSwitchingTasks) {
+        confirmDiscardIfDirty({ onProceed: openTaskInDrawer });
         return;
     }
 
-    // Reset drawer editing state whenever a new task is opened
-    appState.editingTaskId = null;
-    appState.editingValue = task.title;
-    appState.editingDescription = task.description || "";
+    openTaskInDrawer();
 
-    // Keep copies of the original values so "discard changes" can restore them
-    appState.originalTitle = task.title;
-    appState.originalDescription = task.description || "";
-
-    appState.isTaskUnsaved = false;     // Opening a task should not immediately count as having unsaved changes
-
-    render();                           // Re-render so the drawer appears with the selected task data
 }
 
 
@@ -189,11 +361,14 @@ export function initTaskEvents() {
     const listContainer = document.getElementById("list-container");
     const addBtn = document.getElementById("add-btn-js");
     const resetBtn = document.getElementById("deleteAll-btn-js");
+    const sortBtn = document.getElementById("sort-created-btn");
+    const collapseAllBtn = document.getElementById("collapse-all-btn");
 
     // Shared modal elements
     const modal = document.getElementById("my_modal_1");
     const confirmBtn = document.getElementById("confirm-delete-all");
     const cancelBtn = document.getElementById("cancel-delete-all");
+
 
 
     /*
@@ -281,10 +456,43 @@ export function initTaskEvents() {
 
         // Store the dragged task id for later use in the drop event
         draggedTaskId = li.dataset.id;
+
+        if (appState.sortRootByCreated) {
+            appState.sortRootByCreated = null;      // Dragging switches you back to no order
+            saveTasks();
+
+            draggedTaskId = null;
+
+            e.preventDefault();
+            return;
+        }
+
     });
 
     listContainer.addEventListener("dragover", (e) => {     // Allows dropping
         e.preventDefault();
+
+        const li = e.target.closest("li");                  // Find the task row currently under the mouse
+        if (!li || !draggedTaskId) {                        // If it's not over a row or not dragging anything, remove any old "drop" line
+            clearDropIndicator();
+            return;
+        }
+
+        // Don't show indicator on the same item being dragged
+        if (li.dataset.id === draggedTaskId) {
+            clearDropIndicator();
+            return;
+        }
+
+        const rect = li.getBoundingClientRect();        // Get this row’s position & size on the screen
+
+        const mouseY = e.clientY;                       // Mouse position on screen (vertical/Y axis)
+        const rowTop = rect.top;                        // Top of the row (Y position)
+        const rowMiddle = rowTop + rect.height / 2;     // Halfway point down the row
+
+        const before = mouseY < rowMiddle;              // If true show the line above, false show the line below
+
+        setDropIndicator(li, before);                   // Apply the correct visual indicator to this row
     });
 
     listContainer.addEventListener("drop", (e) => {
@@ -292,23 +500,30 @@ export function initTaskEvents() {
         // Find the row where the task was dropped
         const li = e.target.closest("li");
         if (!li || !draggedTaskId) {
+            clearDropIndicator();
             return;
         }
 
         const targetId = li.dataset.id;
 
-        if (draggedTaskId === targetId) {       // Do nothing if task is dropped on itself
+        if (!targetId || draggedTaskId === targetId) {       // Do nothing if task is dropped on itself
+            clearDropIndicator();
             return;
         }
 
         reorderTasks(draggedTaskId, targetId);  // Reorder the tasks in state
 
         draggedTaskId = null;                   // Clear drag state after finishing the move
+        clearDropIndicator();
 
-        saveTasks();                             // Save and re-render so new order stays
+        saveTasks();                            // Save and re-render so new order stays
         render();
     });
 
+    listContainer.addEventListener("dragend", () => {
+        draggedTaskId = null;       // Clear drag state so future drags start clean
+        clearDropIndicator();
+    });
 
 
     /*
@@ -317,7 +532,8 @@ export function initTaskEvents() {
 
     listContainer.addEventListener("keydown",
         function (e) {
-            if (!e.target.classList.contains("subtask-input")) {    // Only react when the user is typing in the subtask input
+            const input = e.target.closest(".subtask-input");       // Only react when the user is typing in the subtask input
+            if (!input) {
                 return;
             }
 
@@ -325,14 +541,30 @@ export function initTaskEvents() {
                 return;
             }
 
-            const title = e.target.value.trim();
-            const parentId = appState.creatingSubtaskFor;
+            e.preventDefault();
 
-            if (title) {                                            // Only add the subtask if there is actual text
-                addSubtask(parentId, title);
+            const title = input.value.trim();
+            if (!title) {                                            // Only add the subtask if there is actual text (do nothing if empty)
+                return;
             }
 
-            render();                                               // Re-render so the new subtask appears
+            const parentId = input.dataset.parentId;
+            if (!parentId) {
+                return;
+            }
+
+            addSubtask(parentId, title);                            // Add subtask to this parent
+
+            // After re-render, focus this parent's input so user can keep adding
+            requestAnimationFrame(() => {
+                const next = listContainer.querySelector(`.subtask-input[data-parent-id="${CSS.escape(parentId)}"]`);
+                if (!next) {
+                    return;
+                }
+
+                next.focus();
+                next.value = "";                           // Clear for the next subtask
+            });
         });
 
 
@@ -345,22 +577,23 @@ export function initTaskEvents() {
     */
 
     listContainer.addEventListener("focusout", function (e) {
-        if (!e.target.classList.contains("subtask-input")) {    // Only handle focus leaving the subtask input
+        const input = e.target.closest(".subtask-input");           // Check if focus left one of the subtask inputs
+        if (!input) {                                               // Stop safely if it wasn't the subtask input
             return;
         }
 
-        const title = e.target.value.trim();
-        const parentId = appState.creatingSubtaskFor;
+        const title = input.value.trim();
+        const parentId = input.dataset.parentId;                   // data-parent-id returns which task this input belongs to
 
-        if (title) {                                            // If there is text, save it as a new subtask
-            addSubtask(parentId, title);
+        if (!parentId) {                                           // Stop safely if the parent id is missing          
+            return;
         }
-        else {
+
+        if (!title) {
             collapseIfEmpty(parentId);                          // Collapse only if user abandoned input empty
-            appState.creatingSubtaskFor = null;
+            render();                                          // Re-render to update UI
         }
 
-        render();                                               // Re-render to update UI
     });
 
 
@@ -415,12 +648,90 @@ export function initTaskEvents() {
     });
 
 
+    if (sortBtn) {
+        sortBtn.addEventListener("click", () => {
+            // Toggle: null/desc -> asc -> desc -> asc...
+            appState.sortRootByCreated = appState.sortRootByCreated === "desc" ? "asc" : "desc";
+
+            saveTasks(); // Persist across reloads
+            render();
+        });
+    }
+
+    if (collapseAllBtn) {
+        collapseAllBtn.addEventListener("click", () => {
+            const game = appState.games.find(g => g.id === appState.activeGameId);
+            if (!game) { // Stop safely if the active game is missing
+                return;
+            }
+
+            collapseAllSubtasks(game.tasks); // Collapse standalone task tree
+
+            game.groups.forEach(group => {
+                collapseAllSubtasks(group.tasks); // Collapse each group's task tree
+            });
+
+            saveTasks();
+            render();
+        });
+    }
 
     /*
     * Click Events
     */
 
     document.addEventListener("click", (e) => {
+
+        // Close button inside drawer ("X")
+        if (e.target.closest("#close-panel")) {
+            confirmDiscardIfDirty({
+                onProceed: () => {
+                    appState.selectedTaskId = null; // Close drawer
+                    render();
+                },
+            });
+            return;
+        }
+
+        // Subtask edit button click
+        const editBtn = e.target.closest("[data-edit-subtask]");
+        if (editBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const taskId = editBtn.dataset.editSubtask;
+            if (!taskId) {
+                return;
+            }
+
+            // Subtasks only (no root tasks)
+            const parent = findParentTask(taskId);
+            if (!parent) {
+                return;
+            }
+
+            startInlineSubtaskEdit(taskId);
+            return;
+        }
+
+        // Open subtasks modal (maximize button in drawer)
+        if (e.target.closest("#open-subtasks-modal")) {
+            const modal = document.getElementById("subtasks_modal");
+            if (!modal) {
+                return;
+            }
+
+            renderSubtasksModal(); // Fill modal with current selected task’s subtasks
+            modal.showModal();
+            return;
+        }
+
+        // Close subtasks modal (X button)
+        if (e.target.closest("#close-subtasks-modal")) {
+            const modal = document.getElementById("subtasks_modal");
+            modal?.close();
+            return;
+        }
 
         if (e.target.closest("#list-container, #subtasks-container")) {             // Handle clicks inside the main list or the compact drawer list
             handleListClick(e);
@@ -434,12 +745,14 @@ export function initTaskEvents() {
                 return;
             }
 
+            recordUndoSnapshot();   // Undo applies to title/description saves
+
             // Only overwrite title when editing the title input
             if (appState.editingTaskId) {
                 task.title = appState.editingValue.trim() || task.title;
             }
 
-            // // Save the description
+            // Save the description
             const desc = (appState.editingDescription || "").trim();
             task.description = desc;
 
@@ -532,36 +845,74 @@ export function initTaskEvents() {
     });
 
 
+
     /*
-    * Input Events
-    */
+   ==========================================================
+
+   ---------------- Subtask Title Inline Edit ---------------
+
+   ==========================================================
+   */
 
     document.addEventListener("input", (e) => {
+        const input = e.target.closest("[data-inline-edit]");   // Only react to the subtask inline edit input
+        if (!input) return;
 
-        // Live title editing inside the drawer
-        const titleInput = e.target.closest("[data-edit-task]");
-        if (titleInput) {
-            appState.editingValue = titleInput.value;
-            updateDirtyState();
+        appState.inlineEditingValue = input.value;              // Keep the draft value in state so it survives re-renders
+    });
 
-            // Re-render the drawer so button enabled/disabled state updates
-            renderTaskDetail();
+    document.addEventListener("keydown", (e) => {
+        const input = e.target.closest("[data-inline-edit]");
+        if (!input) {
             return;
         }
 
+        const taskId = input.dataset.inlineEdit;    // Reads data-inline-edit="TASK_ID"
+        if (!taskId) {
+            return;
+        }
 
-        // Live description editing inside the drawer
-        const descInput = e.target.closest("[data-edit-description]");
-        if (descInput) {
-            appState.editingDescription = descInput.value;
-            updateDirtyState();
+        if (e.key === "Enter") {                   // Enter saves
+            e.preventDefault();                    // Prevents browser default behaviour
+            e.stopPropagation();                   // Stops other key handlers from also firing
+            commitInlineSubtaskEdit(taskId, input.value);
+            return;
+        }
 
-            // Re-render the drawer so button enabled/disabled state updates
-            renderTaskDetail();
+        if (e.key === "Escape") {                 // Escape cancels
+            e.preventDefault();
+            e.stopPropagation();
+            cancelInlineSubtaskEdit();
         }
     });
 
+
+
+    /*
+    ==========================================================
     
+    ----------------------- Undo (Ctrl+Z) --------------------
+    
+    ==========================================================
+    */
+
+    document.addEventListener("keydown", (e) => {
+        const isUndo = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z";     // Ctrl+Z (Windows) or Cmd+Z (Mac)
+        if (!isUndo) {
+            return;
+        }
+
+        e.preventDefault();                 // Stops the browser from undoing text inside an input instead
+
+        const ok = undoLastChange();        // Restore the last snapshot
+
+        // Re-render so the UI matches the restored state
+        if (ok) {
+            render();
+        }
+    });
+
+
     // Initial Page load
     saveTasks();
     render();

@@ -30,12 +30,11 @@ export class Task {
 
         this.expanded = false;                  // Tracks if the task is expanded or collapsed
         this.level = level;
-        this.subtasks = level < 2 ? [] : null; // If level is equal to 2, no more subtasks can be created
+        this.subtasks = level < 2 ? [] : null;  // If level is equal to 2, no more subtasks can be created
 
         // this.tags = []; ---> Create addToArray (categories) function. **
         // Create assignCategories function
         // this.colour; **
-        // this.description; ***
         // this.gallery; ***
         // this.guides; ***
         // this.difficulty; *

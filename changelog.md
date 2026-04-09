@@ -4,8 +4,62 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
+## [0.4.1] Alpha - 2026-04-08 - Branch v0.x -- Pushed to main
+### Added
+- Aria labels to the HTML, where it was missing (accessibility).
+
+### Fixed
+- Spelling mistakes in readme & changelog
+- Drawer button's positioning. Most of the button was not visible.
+
+## [0.4] Alpha - 2026-04-08 - Branch v0.x -- Pushed to main
+### Added
+- Collapse all button that shows when something is collapsable
+- Maximized version of the subtask table inside the task drawer when pressing the maximize button
+- Edit button to edit subtasks besides the subtask title
+- More & better code, to continue to have my sanity
+- Added a MIT License to this project
+
+### Fixed
+- Input box for subtasks is now always visible and on the top of the list
+    - UI of the input box has also been changed to better match the Figma design
+- UI change in task drawer: Better alignment of the 'X' button
+    - The 'X' button is also slightly bigger
+
+### Changed
+- Root task input box:
+    - Placeholder text and Add button made bigger for better readability and accessibility
+    - Colour of KBD component (in root task input) changed for better accessibility
+- Text in different placeholder and accessibility labels
+- Subtask title now is edited via clicking the edit button besides it, instead of double clicking the subtask's title
+
+### Deprecated
+- Previous index.html deleted. Homepage.html took its place as the new index.html.
+
+## [0.3] Pre-Alpha - 2026-04-05 - Branch v0.x
+### Added
+- Edit subtasks
+    - Now, with double click, you can edit the subtask's title/text
+- Drag functionality UI
+    - Drag icon now lights up on hover, instead of all being the same colour all the time
+    - Visual signifier to show the user where the objective is being dropped (with CSS)
+- Sort objectives (root tasks only) by creation time
+    - Added this functionality to the button on the top bar, which was acting as a placeholder until now
+- Undo functionality
+    - Now, the user can undo (one-step undo only):
+        - Deleting single tasks (Doesn't apply to delete all)
+        - Making changes to the subtask & root task titles
+- More & better comments for my sanity and mental health (this is becoming a big ball of code)
+
+### Fixed
+- Cleaned up some duplicated and redudant code
+
+### Changed
+- Added margin to the top and bottom of the Game objectives page (Game.html)
+
 ## [p1] Presentation Prototype - 2026-04-02 - Branch Presentation
 ### Originally presented on March 30th, 2026
+
 ### Added
 - New branch to store the prototypes used in presentations
 - Dev function to temporarily add custom images
@@ -26,7 +80,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
     - Drag button has a drag cursor pointer
     - Root tasks now show you can click on them through the cursor pointer
 
-## [0.2.1] Pre-Alfa - 2026-04-02 - Branch v0.1
+## [0.2.1] Pre-Alpha - 2026-04-02 - Branch v0.x
 ### Added
 - Edit Game title functionality in homepage
 - Breadcrumbs update automatically (no longer static text)
@@ -42,8 +96,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Mouse pointers show correct pointer:
     - Drag button has a drag cursor pointer
     - Root tasks now show you can click on them through the cursor pointer
+- Branch v0.1 renamed to v0.x
 
-## [0.2.0] Pre-Alfa - 2026-03-29 - Branch v0.1
+## [0.2.0] Pre-Alpha - 2026-03-29 - Branch v0.x
 ### Added
 - Root task details through a side-drawer
     - View title, description, and this root task's children and grand-children
@@ -64,7 +119,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Same module is now used in two instances, making this module reusable
 - Button copy from "Add to list" to "Add" (Based off User Testing findings)
 
-## [0.1.1] Pre-Alfa - 2026-03-25 - Branch v0.1
+## [0.1.1] Pre-Alpha - 2026-03-25 - Branch v0.x
 ### Added
 - Drag functionality within same level tasks
 - Delete All now has a warning modal to avoid accidental resets that induce mental breakdowns
@@ -74,7 +129,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed some comments
 - Recursive completion now works with current UI
 
-## [0.1.0] Pre-Alfa - 2026-03-24 - Branch v0.1
+## [0.1.0] Pre-Alpha - 2026-03-24 - Branch v0.x
 ### Added
 - Added a changelod.md file for better/more organized documentation
 - Game selection page (will now become the main page)

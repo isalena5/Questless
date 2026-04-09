@@ -1,4 +1,16 @@
-import { arrowIcon, iconDelete, iconDrag, iconEdit, iconFullSc, iconPlus } from "./icons.js";
+import {
+    arrowIcon,
+    iconDelete,
+    iconDrag,
+    iconEdit,
+    iconFullSc,
+    iconPlus,
+    iconSortAsc,
+    iconSortDesc,
+    iconFilter,
+    iconCirclePlus
+} from "./icons.js";
+
 import { findTaskInGame } from "./logic.js";
 import { appState } from "./state.js";
 import { formatDateTime } from "./utils/date.js";
@@ -36,6 +48,55 @@ const SIZE = {
 /*
 ==========================================================
 
+------------------- Sort Helper (Date) -------------------
+
+==========================================================
+*/
+
+// createdAt is an ISO string in Task model, so parse it
+// to milliseconds before sorting since sorting needs numbers
+function toTime(createdAt) {
+    if (typeof createdAt === "number") {
+        return createdAt;
+    }
+    const parsed = Date.parse(createdAt);
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
+
+
+
+/*
+==========================================================
+
+------------------- Sort Button Icon UI ------------------
+
+==========================================================
+*/
+function renderSortCreatedIcon() {
+    const sortBtn = document.getElementById("sort-created-btn");
+    if (!sortBtn) {
+        return;     // Stop safely if this page doesn't have the sort button
+    }
+
+    const iconHost = sortBtn.querySelector("[data-sort-created-icon]");
+    if (!iconHost) {
+        return;     // Stop safely if the icon wrapper is missing
+    }
+
+    const dir = appState.sortRootByCreated;         // sort by: null, "asc", "desc"
+
+    if (!dir) {
+        iconHost.innerHTML = iconFilter;            // Default icon (no sort)
+    } else {
+        iconHost.innerHTML = dir === "asc" ? iconSortAsc : iconSortDesc;
+    }
+}
+
+
+/*
+==========================================================
+
 ---------------- Drawer Button UI State ------------------
 
 ==========================================================
@@ -44,7 +105,7 @@ function updateDrawerButtons() {
     const saveBtn = document.getElementById("save-task-btn");
     const discardBtn = document.getElementById("discard-task-btn");
 
-    // If the drawer is not currently rendered, stop
+    // If the drawer is not currently rendered, stop (safely)
     if (!saveBtn || !discardBtn) {
         return;
     }
@@ -52,6 +113,286 @@ function updateDrawerButtons() {
     // Controls whether save/discard buttons are enabled based on edit state
     saveBtn.disabled = !appState.isTaskUnsaved;
     discardBtn.disabled = !appState.isTaskUnsaved;
+}
+
+
+/*
+==========================================================
+
+---------------- Collapse All Button UI ------------------
+
+==========================================================
+*/
+function hasAnyExpanded(tasks) {            // Checks the whole task tree (root + nested)
+
+    for (const task of tasks) {
+        if (task.expanded) {                // If any node is expanded, show the collapse button
+            return true;
+        }
+
+        // If this task has children, keep checking downwards in the tree
+        if (task.subtasks && hasAnyExpanded(task.subtasks)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function renderCollapseAllButton(game) {
+    const btn = document.getElementById("collapse-all-btn");
+
+    // Stop safely if this page doesn't have the button
+    if (!btn) {
+        return;
+    }
+
+    // Show only when there's at least one expanded node anywhere
+    const expandedStandalone = hasAnyExpanded(game.tasks);
+    const expandedGroups = game.groups?.some(group => hasAnyExpanded(group.tasks)) ?? false;
+
+    const shouldShow = expandedStandalone || expandedGroups;
+    btn.classList.toggle("is-hidden", !shouldShow);             // is-hidden collapses the button with animation (no empty gap)
+}
+
+
+
+
+/*
+==========================================================
+
+--------------- Subtask Input (Per Level) ----------------
+
+==========================================================
+*/
+function renderSubtaskInputRow(parentTask, container, childLevel, mode = "full") {
+
+    if (mode !== "full") {                        // Don't show in compact drawer
+        return;
+    }
+
+    if (!parentTask?.expanded) {                 // Only when expanded
+        return;
+    }
+
+    if (!parentTask?.subtasks) {                // Only tasks that can have children get a subtask input row
+        return;
+    }
+
+    const size = SIZE[mode];
+
+    const li = document.createElement("li");
+    li.className = "flex items-center gap-3";
+    li.style.marginLeft = `${childLevel * 38}px`;
+
+    li.innerHTML = `
+        <div class="flex items-center ${size.gap} flex-1 list-row">
+
+            <div class="opacity-80" aria-hidden="true">
+                ${iconCirclePlus}
+            </div>
+
+            <input
+                class="subtask-input flex-1 bg-transparent ${size.text} focus:outline-none"
+                data-parent-id="${parentTask.id}"
+                placeholder="Add new objective..."
+                aria-label="Add new objective"
+            />
+        </div>
+    `;
+
+    container.appendChild(li);
+
+    const input = li.querySelector(".subtask-input");
+    const draft = appState.subtaskDrafts?.[parentTask.id] ?? "";    // Fall back to "" so input.value is always a string
+    input.value = draft;                                            // Restores text after any render
+}
+
+
+/*
+==========================================================
+
+-------------------- Left-side Controls ------------------
+
+==========================================================
+*/
+function renderLeftControls(task, level, hasSubtasks, mode) {
+
+    // Only the main list shows drag + expand/collapse controls,
+    // compact does not
+    if (level <= 1 && mode === "full") {
+        return `
+            <div class="drag-handle" draggable="true" aria-label:"Drag task">
+                ${iconDrag}
+            </div>
+            <label class="swap swap-flip ${!hasSubtasks ? "opacity-30" : ""}">
+                <input type="checkbox" ${task.expanded ? "checked" : ""} />
+                ${arrowIcon("right")}
+                ${arrowIcon("down")}
+            </label>
+        `;
+    }
+
+    return "";
+}
+
+
+
+/*
+==========================================================
+
+------------------- Task Row Template --------------------
+
+==========================================================
+*/
+
+// Builds single task row (task & subtask)
+function createTaskRow(task, level = 0, mode = "full") {
+    const size = SIZE[mode];                                            // Pick the size for this render mode (full vs compact)
+    const hasSubtasks = task.subtasks && task.subtasks.length > 0;      // Used to grey out the toggle when nothing can expand
+
+    // Inline edit state:
+    // If this task is being edited, render an <input> instead of plain text <span>
+    const isInlineEditing = appState.inlineEditingTaskId === task.id;
+
+    const showSubtaskEditBtn =
+        mode === "full" && level > 0 && !isInlineEditing; // Subtasks only (no root tasks), and not while editing
+
+    // Edit button rendered as HTML text
+    const editBtnNode = showSubtaskEditBtn
+        ? `
+        <button
+            type="button"
+            class="subtask-edit-btn btn btn-xs btn-circle btn-ghost opacity-70 hover:opacity-100"
+            data-edit-subtask="${task.id}"
+            aria-label="Edit subtask title"
+        >
+            ${iconEdit}
+        </button>
+      `
+        : "";
+
+    // Title rendered as HTML
+    const titleNode = isInlineEditing       // titleNode swaps between a read-only title <span> and an editable <input>
+        ? `
+      <input
+        class="flex-1 ${size.text} bg-transparent focus:outline-none"
+        data-inline-edit="${task.id}"
+        value="${appState.inlineEditingValue ?? task.title}"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    `
+        : `
+      <span
+        class="flex-1 ${size.text} ${task.completed ? "line-through" : ""} ${mode === "full" && level === 0 ? "cursor-pointer" : ""}"
+        data-task-label
+      >${task.title}</span>
+    `;
+
+    return `
+    <div class="flex items-center ${size.gap} flex-1 list-row">
+      ${renderLeftControls(task, level, hasSubtasks, mode)}
+      ${mode === "full" && level === 2 ? `
+        <div class="ml-8">
+          <div class="drag-handle ${size.drag}" draggable="true">
+            ${iconDrag}
+          </div>
+        </div>` : ""}
+
+        <input type="checkbox" class="task-checkbox checkbox ${size.checkbox} checkbox-primary" ${task.completed ? "checked" : ""}
+        aria-label="Mark ${task.title} as complete"/>
+        <div class="flex">
+            ${titleNode}
+            <div class="ml-4">
+                ${editBtnNode}
+            </div>
+      </div>
+    </div>
+
+    <button type="button" class="delete btn ${size.deleteBtn} btn-circle btn-ghost text-error ml-auto" aria-label="Delete the ${task.title} objective">
+      ${iconDelete}
+    </button>
+  `;
+}
+
+
+/*
+==========================================================
+
+------------------ Task Element Creation -----------------
+
+==========================================================
+*/
+function createTaskElement(task, level, mode = "full") {
+    const li = document.createElement("li");
+    li.className = "flex items-center gap-3";
+    li.dataset.id = task.id;
+    li.draggable = mode === "full";              // Only the full task list supports drag-and-drop
+    li.style.marginLeft = `${level * 38}px`;    // Dynamic Indent (by nesting level)
+
+    li.innerHTML = createTaskRow(task, level, mode);
+    return li;
+
+}
+
+
+/*
+==========================================================
+
+-------------------- Recursive Task Render ----------------
+
+==========================================================
+*/
+
+// Render parent tasks
+function renderTask(task, container, level = 0, mode = "full") {
+
+    // Create and append the current task row
+    const li = createTaskElement(task, level, mode);
+    container.appendChild(li);
+
+    renderSubtaskInputRow(task, container, level + 1, mode);    // Always show input for expanded task
+
+    if (task.subtasks && task.expanded) {                       // Recursively render children only if the task is expanded
+        task.subtasks.forEach(sub =>
+            renderSubtask(sub, container, level + 1, mode)
+        );
+    }
+}
+
+// Render Subtasks
+function renderSubtask(task, container, level, mode = "full") {
+
+    const li = createTaskElement(task, level, mode);
+    container.appendChild(li);
+
+    renderSubtaskInputRow(task, container, level + 1, mode);
+
+    if (task.subtasks && task.expanded) {
+        task.subtasks.forEach(sub => {
+            renderSubtask(sub, container, level + 1, mode);
+        });
+    }
+}
+
+
+/*
+==========================================================
+
+---------------- Compact Drawer Task Render --------------
+
+==========================================================
+*/
+function renderTaskCompact(task, container, level = 0) {
+    const li = createTaskElement(task, level, "compact");
+    container.appendChild(li);
+
+    if (task.subtasks && task.subtasks.length > 0) {    // Compact mode recursively shows nested subtasks, but uses the smaller size preset
+        task.subtasks.forEach(sub => {
+            renderTaskCompact(sub, container, level + 1);
+        });
+    }
 }
 
 
@@ -70,13 +411,25 @@ export function render() {
     listContainer.innerHTML = "";           // Clear existing HTML
 
     const game = appState.games.find(g => g.id === appState.activeGameId);
-    if (!game) {
+    if (!game) {                           // Stop safely if the active game is missing
         return;
     }
 
+    renderSortCreatedIcon();
+
+    renderCollapseAllButton(game);         // Show/hide the button based on expanded tasks
+
+    const rootTasks = [...game.tasks];     // Copy list so sorting doesn't change original order
+
+    if (appState.sortRootByCreated === "desc") {
+        rootTasks.sort((a, b) => toTime(b.createdAt) - toTime(a.createdAt));    // Newest first
+    }
+    else if (appState.sortRootByCreated === "asc") {
+        rootTasks.sort((a, b) => toTime(a.createdAt) - toTime(b.createdAt));    // Oldest first
+    }
 
     // Render Standalone/Root Tasks first
-    game.tasks.forEach(task => {
+    rootTasks.forEach((task) => {
         renderTask(task, listContainer, 0);
     });
 
@@ -95,162 +448,6 @@ export function render() {
         });
     });
 }
-
-
-
-/*
-==========================================================
-
-------------------- Task Row Template --------------------
-
-==========================================================
-*/
-
-// Builds single task row (task & subtask)
-function createTaskRow(task, level = 0, mode = "full") {
-    const size = SIZE[mode];
-    const hasSubtasks = task.subtasks && task.subtasks.length > 0;
-
-    return `
-    <div class="flex items-center ${size.gap} flex-1 list-row">
-        
-        ${renderLeftControls(task, level, hasSubtasks, mode)}
-        ${mode === "full" && level === 2 ? `
-            <div class="ml-8">
-                <div class="drag-handle ${size.drag}" draggable="true">
-                ${iconDrag}
-                </div>
-            </div>` : ""}
-
-        <input type="checkbox" class="task-checkbox checkbox ${size.checkbox} checkbox-primary" ${task.completed ? "checked" : ""} />
-        <span class="flex-1 ${size.text} ${task.completed ? "line-through" : ""}
-        ${mode === "full" && level === 0 ? "cursor-pointer" : ""}">${task.title}</span>
-    </div>
-
-    <button class="delete btn ${size.deleteBtn} btn-circle btn-ghost text-error ml-auto">
-        ${iconDelete}
-    </button>
-    `;
-}
-
-
-
-
-/*
-==========================================================
-
--------------------- Recursive Task Render ----------------
-
-==========================================================
-*/
-
-// Render parent tasks
-function renderTask(task, container, level = 0, mode = "full") {
-
-    // Create and append the current task row
-    const li = createTaskElement(task, level, mode);
-    container.appendChild(li);
-
-    renderInputIfActive(task, container, level);    // If this is the active task for subtask creation, render the input right below it
-
-    if (task.subtasks && task.expanded) {           // Recursively render children only if the task is expanded
-        task.subtasks.forEach(sub =>
-            renderSubtask(sub, container, level + 1, mode)
-        );
-    }
-}
-
-// Render Subtasks
-function renderSubtask(task, container, level, mode = "full") {
-
-    const li = createTaskElement(task, level, mode);
-    container.appendChild(li);
-
-    renderInputIfActive(task, container, level);
-
-    if (task.subtasks && task.expanded) {
-        task.subtasks.forEach(sub => {
-            renderSubtask(sub, container, level + 1, mode);
-        });
-    }
-}
-
-
-
-/*
-==========================================================
-
------------------- Task Element Creation -----------------
-
-==========================================================
-*/
-function createTaskElement(task, level, mode = "full") {
-    const li = document.createElement("li");
-    li.className = "flex items-center gap-3";
-    li.dataset.id = task.id;
-    li.draggable = mode === "full";           // Only the full task list supports drag-and-drop
-    li.style.marginLeft = `${level * 38}px`; // Dynamic Indent
-
-    li.innerHTML = createTaskRow(task, level, mode);
-    return li;
-
-}
-
-
-
-/*
-==========================================================
-
--------------------- Left-side Controls ------------------
-
-==========================================================
-*/
-function renderLeftControls(task, level, hasSubtasks, mode) {
-
-    if (level <= 1 && mode === "full") {    // Only the main list shows drag + expand/collapse controls, compact does not
-        return `
-            <div class="drag-handle" draggable="true">
-                ${iconDrag}
-            </div>
-            <label class="swap swap-flip ${!hasSubtasks ? "opacity-30" : ""}">
-                <input type="checkbox" ${task.expanded ? "checked" : ""} />
-                ${arrowIcon("right")}
-                ${arrowIcon("down")}
-            </label>
-        `;
-    }
-
-    return "";
-}
-
-
-
-
-/*
-==========================================================
-
------------------- Active Subtask Input ------------------
-
-==========================================================
-*/
-function renderInputIfActive(task, container, level) {
-
-    if (appState.creatingSubtaskFor !== task.id) {          // Only render the input if this is the current task
-        return;
-    }
-
-    const inputLi = document.createElement("li");
-    inputLi.className = `flex items-center gap-2`;
-    inputLi.style.marginLeft = `${(level + 1) * 24}px`;     // Dynamic Indent
-
-    inputLi.innerHTML = `
-        <input class="input input-sm input-bordered w-full subtask-input"
-        placeholder="Type new objective..." autofocus />
-    `;
-
-    container.appendChild(inputLi);
-}
-
 
 
 /*
@@ -276,13 +473,14 @@ export function renderTaskDetail() {
 
     panel.classList.remove("hidden");
 
-    const { formattedDate, formattedTime } = formatDateTime(task.createdAt);    // Format the stored creation date into a more readable format
+    const { formattedDate, formattedTime } = formatDateTime(task.createdAt);    // Format the stored creation date (task.createdAt) into a more readable format
 
     panel.innerHTML = `
-        <div class="p-3 flex flex-col h-full">
-            <div dir="rtl" class="h-10 w-full justify-end">
-                <button id="close-panel" class="btn btn-circle btn-xs">${iconDelete}</button>
-            </div>
+        <div dir="rtl" class="p-7 h-10 w-full justify-end">
+                <button type="button" id="close-panel" class="btn btn-circle btn-md p-2" aria-label="Close project's side-drawer">${iconDelete}</button>
+        </div>
+
+        <div class="px-16 flex flex-col h-full">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-4xl font-bold">${appState.editingTaskId === task.id
             ? `<input
@@ -329,7 +527,8 @@ export function renderTaskDetail() {
                 <div class="flex flex-col h-100">
                     <div class="flex flex-row mb-3">
                         <h6 class="text-base mr-3">Subtasks</h6>
-                        <button class="btn btn-primary btn-xs rounded-selector text-primary-content">${iconFullSc}</button>
+                        <button type="button" id="open-subtasks-modal" class="btn btn-primary btn-xs rounded-selector text-primary-content"
+                        aria-label="Open subtask compact table in fullscreen">${iconFullSc}</button>
                     </div>
                     <div id="subtasks-container"
                         class="flex flex-col gap-3 py-2 px-4 bg-base-300/75 rounded-selector list overflow-auto">
@@ -337,13 +536,34 @@ export function renderTaskDetail() {
                 </div>
             </div>
 
+            <!-- Subtasks full view modal -->
+            <dialog id="subtasks_modal" class="modal">
+            <div class="modal-box w-[65vw] max-w-none h-[65vh] p-0">
+                <div class="p-4 flex items-center justify-between border-b border-base-300">
+                <h3 class="font-bold text-lg">Subtasks</h3>
+
+                <button id="close-subtasks-modal" type="button" class="btn btn-circle btn-xs p-1">
+                    ${iconDelete}
+                </button>
+                </div>
+
+                <div class="p-4 h-[calc(65vh-64px)] overflow-auto">
+                <div id="subtasks-modal-container" class="flex flex-col gap-3 list"></div>
+                </div>
+            </div>
+
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
+            </dialog>
+
             <!-- Buttons Bottom -->
-            <div class="flex justify-between mt-auto mb-[24px]">
-                <button id="discard-task-btn" class="btn btn-error">
+            <div class="flex justify-between mt-auto mb-22">
+                <button type="button" id="discard-task-btn" class="btn btn-error" aria-label="Discard changes">
                     Discard changes
                 </button>
 
-                <button id="save-task-btn" class="btn btn-primary">
+                <button type="button" id="save-task-btn" class="btn btn-primary" aria-label="Save changes">
                     Save changes
                 </button>
             </div>
@@ -358,11 +578,6 @@ export function renderTaskDetail() {
             renderTaskCompact(sub, container, 0);
         });
     }
-
-    document.getElementById("close-panel").onclick = () => {            // Close button clears the selected task and hides the drawer
-        appState.selectedTaskId = null;
-        renderTaskDetail();
-    };
 
     updateDrawerButtons();                                              // Refresh save/discard enabled state after the drawer is rendered
 
@@ -394,23 +609,40 @@ export function renderTaskDetail() {
 }
 
 
-
 /*
 ==========================================================
 
----------------- Compact Drawer Task Render --------------
+------------------- Subtasks Modal Render ----------------
 
 ==========================================================
 */
-function renderTaskCompact(task, container, level = 0) {
-    const li = createTaskElement(task, level, "compact");
-    container.appendChild(li);
+export function renderSubtasksModal() {
+    const container = document.getElementById("subtasks-modal-container");
 
-    if (task.subtasks && task.subtasks.length > 0) {    // Compact mode recursively shows nested subtasks, but uses the smaller size preset
-        task.subtasks.forEach(sub => {
-            renderTaskCompact(sub, container, level + 1);
-        });
+    // Stop safely if modal isn't on this page
+    if (!container) {
+        return;
     }
+
+    // Clear old modal content before rebuilding it
+    container.innerHTML = "";
+
+    // Stop safely if no root task is selected
+    if (!appState.selectedTaskId) {
+        return;
+    }
+
+    const task = findTaskInGame(appState.selectedTaskId);
+
+    // Stop safely if there are no subtasks to show
+    if (!task || !task.subtasks || task.subtasks.length === 0) {
+        return;
+    }
+
+    // Reuse your existing compact renderer so it matches the drawer style
+    task.subtasks.forEach((sub) => {
+        renderTaskCompact(sub, container, 0);
+    });
 }
 
 
@@ -428,7 +660,7 @@ export function renderGames() {
 
     appState.games.forEach(game => {
         const card = document.createElement("div");
-        card.dataset.gameId = game.id;
+        card.dataset.gameId = game.id;      // Used by homepage click handler to navigate to the game page
 
         card.className = "card w-[350px] overflow-hidden group relative mx-auto"
 
@@ -456,7 +688,7 @@ export function renderGames() {
                 
                         <p data-game-name class="text-white font-bold">${game.name}</p>
 
-                        <button class="edit-game-btn btn btn-xs btn-circle btn-secondary mt-1">
+                        <button type="button" class="edit-game-btn btn btn-xs btn-circle btn-secondary mt-1" aria-label="Edit game title">
                             ${iconEdit}
                         </button>
 
@@ -471,7 +703,12 @@ export function renderGames() {
 
 }
 
-// Gallery container code
+
+
+
+/* This is a mouseketool we'll use for later */
+
+// Gallery container code (to be used later)
 /*
 <div class="task-gallery flex flex-col w-full justify-start bg-accent mb-4">
                     <div class="flex flex-row">
