@@ -13,15 +13,15 @@
 
   - [Project Overview](#-project-overview)
       - [Mission](#-mission)
-      - [Why Questless?](#-why-questless?)
-  - [Features](#-features)
+      - [Why Questless?](#why-questless)
+  - [Features](#️-features)
   - [Get started](#-get-started)
       - [Installation](#-installation)
-      - [Prototype](#-prototype)
+      - [Prototype](#️-prototype)
       - [Official Release](#official-release)
   - [Latest Updates](#-latest-updates)
-  - [Version](#-version)
-  - [Upcoming Changes](#-upcoming-changes)
+  - [Version](#0️⃣-version)
+  - [Upcoming Changes](#️-upcoming-changes)
   - [Special Thanks](#-special-thanks)
   - [License](#-license)
 </details>
@@ -62,7 +62,7 @@ The 1.0 release is going to be the first official release of this program. At th
 ## ❗ Latest Updates
 
 > \[!NOTE]
-> ## [0.4.1] Alpha - 2026-04-08 - Branch v0.x -- Pushed to main
+> #### [0.4.1] Alpha - 2026-04-08 - Branch v0.x -- Pushed to main
 > ### Added
 > - Aria labels to the HTML, where it was missing (accessibility).
 >
