@@ -19,8 +19,8 @@
         <div class="content-flex gap-4">
             <div class="flex w-[874px] gap-4">
                 <label class="input input-lg w-full">
-                    <input type="text" id="input-box" class="grow w-full" placeholder="Type your new project..." />
-                    <kbd class="kbd kbd-md bg-base-100 text-lg">⏎</kbd>
+                    <input type="text" id="input-box" class="grow w-full" placeholder="Type your new project..."/>
+                    <kbd class="kbd kbd-md bg-base-100 text-lg" aria-hidden="true">⏎</kbd>
                 </label>
 
                 <button id="add-btn-js" class="btn btn-primary btn-lg rounded-xl">
@@ -40,7 +40,7 @@
                                 class="btn btn-ghost btn-md text-accent-content hover:bg-neutral/5">
                                 <span data-sort-created-icon aria-hidden="true">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                        class="size-4">
+                                        class="size-4" aria-hidden="true">
                                         <path fill-rule="evenodd"
                                             d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 0 1 .628.74v2.288a2.25 2.25 0 0 1-.659 1.59l-4.682 4.683a2.25 2.25 0 0 0-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 0 1 8 18.25v-5.757a2.25 2.25 0 0 0-.659-1.591L2.659 6.22A2.25 2.25 0 0 1 2 4.629V2.34a.75.75 0 0 1 .628-.74Z"
                                             clip-rule="evenodd" />
@@ -68,7 +68,7 @@
 
                         <button type="button" id="deleteAll-btn-js" class="btn btn-error btn-sm rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                class="size-4">
+                                class="size-4" aria-hidden="true">
                                 <path fill-rule="evenodd"
                                     d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z"
                                     clip-rule="evenodd" />
@@ -77,7 +77,7 @@
                         </button>
                     </div>
 
-                    <ul id="list-container" class="list mt-4 space-y-2">
+                    <ul id="list-container" class="list mt-4 space-y-2" aria-label="Projects and objectives list">
                     </ul>
                 </div>
             </div>

@@ -1,9 +1,10 @@
 <div>
-    <img src="Logotype_Banner.png" alt="Questless" width="100%">
+    <img src="branding/Logotype_Banner.png" alt="Questless" width="100%">
     <h3>To-do list program for neuro-divergent gamers to lessen their cognitive-load while playing sandbox games!</h3>
 </div>
-<a href="https://github.com/isalena5/Questless/tree/v0.x"><img alt="Static Badge Version" src="https://img.shields.io/badge/version-v0.4-orange?style=flat&logo=github&logoSize=auto"></a>
-<a href="#-license"><img alt="Static Badge" src="https://img.shields.io/badge/License-MIT-yellow?style=flat&logoSize=auto"></a>
+<a href="https://github.com/isalena5/Questless"><img alt="Static Badge Version" src="https://img.shields.io/badge/version-v0.4.1-brightgreen?style=flat&logo=github&logoSize=auto"></a>
+<a href="https://github.com/isalena5/Questless/tree/v0.x"><img alt="Static Badge Experimental" src="https://img.shields.io/badge/experimental-v0.4.1-orange?style=flat&logo=github&logoSize=auto"></a>
+<a href="#-license"><img alt="Static Badge License" src="https://img.shields.io/badge/License-MIT-yellow?style=flat&logoSize=auto"></a>
 
 <div><h3></h3></div>
 
@@ -12,7 +13,7 @@
 
   - [Project Overview](#-project-overview)
       - [Mission](#-mission)
-      - [Why Questless?](#why-questless?)
+      - [Why Questless?](#-why-questless?)
   - [Features](#-features)
   - [Get started](#-get-started)
       - [Installation](#-installation)
@@ -30,17 +31,17 @@
 ### 🎯 Mission
 To develop a digital tool to help neuro-divergent gamers lessen their cognitive load when playing open-world and sandbox games, so they can feel less overwhelm and experience games better.
 
-### Why Questless?
+### <img alt="Questless Logo Icon" src="branding/Icon_logo_white.png" width="25%"> Why Questless?
 I constantly forget what I was doing in games whenever I take a break. Especially, in Sandbox games.
-Instead of continuing to abandon games or reset worlds in the name of overwhelming forgetfulness, I decided to come up with a solution that let me keep track of my creative gaming projects that would support me as it is designed to do just one thing: support MY gaming journey throughout sandbox games.
+Instead of continuing to abandon games or reset worlds in the name of overwhelming forgetfulness, I decided to come up with a solution that lets me keep track of my creative gaming projects. Designed to do just one thing: support MY gaming journey throughout sandbox games.
 
 ## ⚙️ Features
 - 🔒 Privacy: No cloud saves, no lack of privacy. The program uses local storage to save your gaming projects.
-- 📵 No distractions: Use it on your second monitor and tune out all distractions. The first official release will be run as a program on your computer with the help of Electron.
-- 🎮 Playful & Fun: No need to be boring. This may be an specialized to-do list application, but that doesn't mean it has to be boring. Let's bring the playfulness into gaming tools.
-- 👍 Easy to use: Easy to use and get started for most gamers. Despite their computer literacy.
+- 📵 No distractions: Use it on your second monitor and tune out all distractions. The first official release will be run as a program on your computer.
+- 🎮 Playful & Fun: No need to be boring. This may be a specialized to-do list application, but that doesn't mean it has to be boring. Let's bring the playfulness into gaming tools.
+- 👍 Easy to use: Easy to use and get started for most gamers. No matter the level of their computer literacy.
 - 😌 One-step-undo for little mistakes: Deleted a task by accident? Changed the objective without meaning to? Just hit 'Ctrl+Z' and continue playing like nothing happened.
-- ⏲ Fast & easy set-up: The point of this tool is not to get a new application in which you need to set aside 1+ hours of your day just to be able to use it. Gaming is the focus and we know that. Simply, add your game, add your objectives and keep adding as you go. No need for complex set-ups when all we want is to play games as soon as we can.
+- ⏲ Fast & easy set-up: The point of this tool is not to get a new application in which you need to set aside 1+ hours of your day just to be able to use it. Gaming is the focus and we know that. Simply, add your game, add your objectives, and keep adding as you go. No need for complex set-ups when all we want is to play games as soon as we can.
 - 🖱 Sort, drag & collapse: Sort your projects by creation date, drag and drop your projects and objectives wherever you want in the list, and collapse all projects with one click.
 - 👩‍💻 Focus on one project at a time: Click on your projects to see more details about them. See all your objectives in one place without having to look at all your projects at once.
 
@@ -61,7 +62,15 @@ The 1.0 release is going to be the first official release of this program. At th
 ## ❗ Latest Updates
 
 > \[!NOTE]
-> #### Alfa [0.4] - 2026-04-08 -- Pushed to main
+> ## [0.4.1] Alpha - 2026-04-08 - Branch v0.x -- Pushed to main
+> ### Added
+> - Aria labels to the HTML, where it was missing (accessibility).
+>
+> ### Fixed
+> - Spelling mistakes in readme & changelog
+> - Drawer button's positioning. Most of the button was not visible.
+>
+> #### Alpha [0.4] - 2026-04-08 -- Pushed to main
 > ### Added
 > - Collapse all button that shows when something is collapsable
 > - Maximized version of the subtask table inside the task drawer when pressing the maximize button
@@ -86,7 +95,7 @@ The 1.0 release is going to be the first official release of this program. At th
 > - Previous index.html deleted. Homepage.html took its place as the new index.html.
 
 ## 0️⃣ Version
-The current latest version is Alpha 0.4. You can access it through the main and ![v0.x branch](https://github.com/isalena5/Questless/tree/v0.x).
+The current latest version is Alpha 0.4.1. You can access it through the main and ![v0.x branch](https://github.com/isalena5/Questless/tree/v0.x).
 
 ## 🗒️ Upcoming changes
 - Adding grouping

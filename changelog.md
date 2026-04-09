@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/) after v0.1.
 
-## [0.4] Alfa - 2026-04-08 - Branch v0.x -- Pushed to main
+## [0.4.1] Alpha - 2026-04-08 - Branch v0.x -- Pushed to main
+### Added
+- Aria labels to the HTML, where it was missing (accessibility).
+
+### Fixed
+- Spelling mistakes in readme & changelog
+- Drawer button's positioning. Most of the button was not visible.
+
+## [0.4] Alpha - 2026-04-08 - Branch v0.x -- Pushed to main
 ### Added
 - Collapse all button that shows when something is collapsable
 - Maximized version of the subtask table inside the task drawer when pressing the maximize button
@@ -28,7 +36,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Deprecated
 - Previous index.html deleted. Homepage.html took its place as the new index.html.
 
-## [0.3] Pre-Alfa - 2026-04-05 - Branch v0.x
+## [0.3] Pre-Alpha - 2026-04-05 - Branch v0.x
 ### Added
 - Edit subtasks
     - Now, with double click, you can edit the subtask's title/text
@@ -49,7 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - Added margin to the top and bottom of the Game objectives page (Game.html)
 
-## [0.2.1] Pre-Alfa - 2026-04-02 - Branch v0.x
+## [0.2.1] Pre-Alpha - 2026-04-02 - Branch v0.x
 ### Added
 - Edit Game title functionality in homepage
 - Breadcrumbs update automatically (no longer static text)
@@ -67,7 +75,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
     - Root tasks now show you can click on them through the cursor pointer
 - Branch v0.1 renamed to v0.x
 
-## [0.2.0] Pre-Alfa - 2026-03-29 - Branch v0.x
+## [0.2.0] Pre-Alpha - 2026-03-29 - Branch v0.x
 ### Added
 - Root task details through a side-drawer
     - View title, description, and this root task's children and grand-children
@@ -88,7 +96,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Same module is now used in two instances, making this module reusable
 - Button copy from "Add to list" to "Add" (Based off User Testing findings)
 
-## [0.1.1] Pre-Alfa - 2026-03-25 - Branch v0.x
+## [0.1.1] Pre-Alpha - 2026-03-25 - Branch v0.x
 ### Added
 - Drag functionality within same level tasks
 - Delete All now has a warning modal to avoid accidental resets that induce mental breakdowns
@@ -98,7 +106,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed some comments
 - Recursive completion now works with current UI
 
-## [0.1.0] Pre-Alfa - 2026-03-24 - Branch v0.x
+## [0.1.0] Pre-Alpha - 2026-03-24 - Branch v0.x
 ### Added
 - Added a changelod.md file for better/more organized documentation
 - Game selection page (will now become the main page)

@@ -222,7 +222,7 @@ function renderLeftControls(task, level, hasSubtasks, mode) {
     // compact does not
     if (level <= 1 && mode === "full") {
         return `
-            <div class="drag-handle" draggable="true">
+            <div class="drag-handle" draggable="true" aria-label:"Drag task">
                 ${iconDrag}
             </div>
             <label class="swap swap-flip ${!hasSubtasks ? "opacity-30" : ""}">
@@ -300,7 +300,8 @@ function createTaskRow(task, level = 0, mode = "full") {
           </div>
         </div>` : ""}
 
-        <input type="checkbox" class="task-checkbox checkbox ${size.checkbox} checkbox-primary" ${task.completed ? "checked" : ""} />
+        <input type="checkbox" class="task-checkbox checkbox ${size.checkbox} checkbox-primary" ${task.completed ? "checked" : ""}
+        aria-label="Mark ${task.title} as complete"/>
         <div class="flex">
             ${titleNode}
             <div class="ml-4">
@@ -309,7 +310,7 @@ function createTaskRow(task, level = 0, mode = "full") {
       </div>
     </div>
 
-    <button class="delete btn ${size.deleteBtn} btn-circle btn-ghost text-error ml-auto">
+    <button type="button" class="delete btn ${size.deleteBtn} btn-circle btn-ghost text-error ml-auto" aria-label="Delete the ${task.title} objective">
       ${iconDelete}
     </button>
   `;
@@ -476,7 +477,7 @@ export function renderTaskDetail() {
 
     panel.innerHTML = `
         <div dir="rtl" class="p-7 h-10 w-full justify-end">
-                <button id="close-panel" class="btn btn-circle btn-md p-2">${iconDelete}</button>
+                <button type="button" id="close-panel" class="btn btn-circle btn-md p-2" aria-label="Close project's side-drawer">${iconDelete}</button>
         </div>
 
         <div class="px-16 flex flex-col h-full">
@@ -526,7 +527,8 @@ export function renderTaskDetail() {
                 <div class="flex flex-col h-100">
                     <div class="flex flex-row mb-3">
                         <h6 class="text-base mr-3">Subtasks</h6>
-                        <button id="open-subtasks-modal" class="btn btn-primary btn-xs rounded-selector text-primary-content">${iconFullSc}</button>
+                        <button type="button" id="open-subtasks-modal" class="btn btn-primary btn-xs rounded-selector text-primary-content"
+                        aria-label="Open subtask compact table in fullscreen">${iconFullSc}</button>
                     </div>
                     <div id="subtasks-container"
                         class="flex flex-col gap-3 py-2 px-4 bg-base-300/75 rounded-selector list overflow-auto">
@@ -556,12 +558,12 @@ export function renderTaskDetail() {
             </dialog>
 
             <!-- Buttons Bottom -->
-            <div class="flex justify-between mt-auto mb-[24px]">
-                <button id="discard-task-btn" class="btn btn-error">
+            <div class="flex justify-between mt-auto mb-22">
+                <button type="button" id="discard-task-btn" class="btn btn-error" aria-label="Discard changes">
                     Discard changes
                 </button>
 
-                <button id="save-task-btn" class="btn btn-primary">
+                <button type="button" id="save-task-btn" class="btn btn-primary" aria-label="Save changes">
                     Save changes
                 </button>
             </div>
@@ -686,7 +688,7 @@ export function renderGames() {
                 
                         <p data-game-name class="text-white font-bold">${game.name}</p>
 
-                        <button class="edit-game-btn btn btn-xs btn-circle btn-secondary mt-1">
+                        <button type="button" class="edit-game-btn btn btn-xs btn-circle btn-secondary mt-1" aria-label="Edit game title">
                             ${iconEdit}
                         </button>
 
