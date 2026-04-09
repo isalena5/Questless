@@ -31,7 +31,7 @@
 ### 🎯 Mission
 To develop a digital tool to help neuro-divergent gamers lessen their cognitive load when playing open-world and sandbox games, so they can feel less overwhelm and experience games better.
 
-### <img alt="Questless Logo Icon" src="branding/Icon_logo_white.png" width="5%"> Why Questless?
+### <img alt="Questless Logo Icon" src="branding/Icon_logo_white.png" width="2%"> Why Questless?
 I constantly forget what I was doing in games whenever I take a break. Especially, in Sandbox games.
 Instead of continuing to abandon games or reset worlds in the name of overwhelming forgetfulness, I decided to come up with a solution that lets me keep track of my creative gaming projects. Designed to do just one thing: support MY gaming journey throughout sandbox games.
 
