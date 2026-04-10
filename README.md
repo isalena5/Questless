@@ -54,7 +54,7 @@ The current version of this program does not support installation just yet. The 
 ### 🖱️ Prototype
 Through the prototype, you'll be able to access an Alpha version of the application with some features missing. It is only for demonstration purposes, which means that the features and usability are limited at this time.
 
-To access it, go to the following link.
+To access it, go to the following [link](https://isalena5.github.io/Questless/).
 
 ### Official Release
 The 1.0 release is going to be the first official release of this program. At the moment, I'm still working on this to make it a reality.
